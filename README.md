@@ -5,3 +5,5 @@
 javax mail
 
 sqlite-jdbc
+
+itextpdf
