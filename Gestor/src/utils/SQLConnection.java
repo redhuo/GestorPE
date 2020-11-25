@@ -8,15 +8,17 @@ package utils;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author Arco Iris
  */
 public class SQLConnection {
   
-  static Connection conn = null;
+  private Connection conn = null;
   
-  public static void connect() {
+  public Connection connect() {
     
     try {
       // db parameters
@@ -25,12 +27,15 @@ public class SQLConnection {
       conn = DriverManager.getConnection(url);
             
       System.out.println("Connection to SQLite has been established.");
+      System.out.println(conn.getMetaData());
+      return conn;
             
     } 
     catch (SQLException e) {
       System.out.println(e.getMessage());
+      
     } 
-    finally {
+   /* finally {
       try {
         if(conn != null) {
            conn.close();
@@ -39,11 +44,10 @@ public class SQLConnection {
       catch (SQLException ex) {
         System.out.println(ex.getMessage());
       }
-    }
+    }*/
+    return null;
   }
   
-  public static void main(String[] args){
-     connect(); 
-      
+  public static void main(String[] args){   
   }
 }
