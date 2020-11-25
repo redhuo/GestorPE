@@ -20,7 +20,7 @@ public class SQLConnection {
     
     try {
       // db parameters
-      String url = "jdbc:sqlite:C:/sqlite/db/chinook.db";
+      String url = "jdbc:sqlite:C:/sqlite/gestorpe.db";
       // create a connection to the database
       conn = DriverManager.getConnection(url);
             
@@ -40,5 +40,10 @@ public class SQLConnection {
         System.out.println(ex.getMessage());
       }
     }
+  }
+  
+  public static void main(String[] args){
+     connect(); 
+      
   }
 }
