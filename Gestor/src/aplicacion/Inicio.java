@@ -1,13 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Ventana de inicio de la aplicacion, consulta de plan de estudio, consulta de
+ * curso y eliminacion de curso y requisito y correquisito de un curso
+ * @author WonMi Lim y Jimmy Tsang
  */
+
 package aplicacion;
 
+import java.util.Optional;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.geometry.Insets;
@@ -16,28 +16,25 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-/**
- *
- * @author wonmi
- */
 public class Inicio extends Application {
   String escuela;
-  String plan;
+  int plan;
+  String curso;
     
   @Override
   public void start(Stage primaryStage) {
@@ -49,61 +46,55 @@ public class Inicio extends Application {
     grid.setVgap(15);
     grid.setPadding(new Insets(25));
     
-    Scene scene = new Scene(grid, 700, 650);
+    Scene scene = new Scene(grid, 900, 650);
     
+    //Carga los recurso de un archivo css
     scene.getStylesheets().add(
         RegistroEscuela.class.getResource("/css/General.css").toExternalForm());
     primaryStage.setScene(scene);
     
-    Text titulo = new Text("Consultar Plan de Estudio");
+    //Seleccionar una escuela o area academica
+    Text titulo = new Text("Escuela propietaria:");
     titulo.setFill(Color.WHITE);
     titulo.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-    grid.add(titulo, 0, 0, 2, 1);
-
-    Label lblEscuela = new Label("Escuela propietaria del curso:");
-    grid.add(lblEscuela, 0, 1);
-    
+    grid.add(titulo, 0, 0);
+    //Lista desplegable de escuelas o areas academicas
     ComboBox bxEscuela = new ComboBox();
-    grid.add(bxEscuela, 1, 1);    
+    grid.add(bxEscuela, 1, 0);  
+    //Se activa al seleccionar una escuela de la lista desplagable
     bxEscuela.setOnAction((Event ev) -> {
       escuela = bxEscuela.getSelectionModel().getSelectedItem().toString();    
     });
-
-    Label lblCodigo = new Label("Codigo:");
-    grid.add(lblCodigo, 2, 1);
     
+    //Seleccionar un plan de estudio
+    Text tituloPlan = new Text("Consultar Plan de Estudio");
+    tituloPlan.setFill(Color.WHITE);
+    tituloPlan.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+    grid.add(tituloPlan, 0, 1);
+    Label lblCodigoPlan = new Label("Codigo:");
+    grid.add(lblCodigoPlan, 1, 1);
+    //Lista desplegable de codigo de planes de estudio
     ComboBox bxPlan = new ComboBox();
-    grid.add(bxPlan, 3, 1); 
+    grid.add(bxPlan, 2, 1); 
+    Label lblFecha = new Label("Vigencia:");
+    grid.add(lblFecha, 3, 1);
+    //Se activa al seleccionar un plan de estudio de la lista desplagable 
     bxPlan.setOnAction((Event ev) -> {
-      plan = bxEscuela.getSelectionModel().getSelectedItem().toString();    
+      plan = Integer.parseInt(bxEscuela.getSelectionModel().getSelectedItem().toString());    
     });
     
-    Label lblFecha = new Label("Vigencia:");
-    TextField txtFecha = new TextField();
-    txtFecha.setPromptText("dd/mm/yyyy");
-    HBox hbFecha = new HBox(10);
-    hbFecha.setAlignment(Pos.CENTER);
-    hbFecha.getChildren().addAll(lblFecha, txtFecha);
-    grid.add(hbFecha, 0, 2, 4, 1);
-    
-    Button btnGenerarPdf = new Button("Generar PDF y enviar por correo");
-    Button btnConsultar = new Button("Consultar");
-    HBox hbBtnConsultar = new HBox(10);
-    hbBtnConsultar.setAlignment(Pos.BOTTOM_RIGHT);
-    hbBtnConsultar.getChildren().addAll(btnConsultar, btnGenerarPdf);
-    grid.add(hbBtnConsultar, 3, 3);
-    
-    Text lblTabla = new Text("Cursos del plan de estudio");
-    lblTabla.setFill(Color.WHITE);
-    lblTabla.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-    grid.add(lblTabla, 0, 4);
-    
-    TableView tabla = new TableView();
+    //Tabla de cursos pertenecientes al plan de estudio
+    Text lblTablaCursos = new Text("Cursos del plan de estudio");
+    lblTablaCursos.setFill(Color.WHITE);
+    lblTablaCursos.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+    grid.add(lblTablaCursos, 0, 2);
+    TableView tablaCursos = new TableView();
+    //Columnas de la tabla de cursos
     TableColumn colCodigo = new TableColumn("Codigo");
-    colCodigo.setMinWidth(100);
+    colCodigo.setMinWidth(50);
     colCodigo.setCellValueFactory( new PropertyValueFactory<>("codigo"));
     TableColumn colNombre = new TableColumn("Nombre");
-    colNombre.setMinWidth(275);
+    colNombre.setMinWidth(270);
     colNombre.setCellValueFactory( new PropertyValueFactory<>("nombre"));
     TableColumn colBloque = new TableColumn("Bloque");
     colBloque.setMinWidth(100);
@@ -114,88 +105,186 @@ public class Inicio extends Application {
     TableColumn colCreditos = new TableColumn("Creditos");
     colCreditos.setMinWidth(50);
     colCreditos.setCellValueFactory( new PropertyValueFactory<>("creditos"));
-    tabla.getColumns().addAll(colCodigo, colNombre, colBloque, colHoras, colCreditos);
+    //Agrega las columnas creadas a la tabla de cursos
+    tablaCursos.getColumns().addAll(colCodigo, colNombre, 
+        colBloque, colHoras, colCreditos);
+    //Panel con barra de desplazamiento en la que se situa la tabla de cursos
+    ScrollPane spTablaCursos = new ScrollPane();
+    spTablaCursos.setHbarPolicy(ScrollBarPolicy.NEVER);
+    spTablaCursos.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+    spTablaCursos.setVmax(200);
+    spTablaCursos.setHmax(625);
+    spTablaCursos.setPrefSize(625, 200);
+    spTablaCursos.setContent(tablaCursos);
     
-    ScrollPane sp = new ScrollPane();
-    sp.setHbarPolicy(ScrollBarPolicy.NEVER);
-    sp.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
-    sp.setVmax(200);
-    sp.setHmax(600);
-    sp.setPrefSize(600, 200);
-    sp.setContent(tabla);
-    grid.add(sp, 0, 5, 4, 1);
+    //Conjunto de botones para las funciones del plan de estudio se ubica en una caja vertical
+    Button btnConsultar = new Button("Consultar");
+    Button btnGenerarPdf = new Button("Generar PDF y enviar por correo");
+    Button btnEliminarCurso = new Button("Eliminar curso");
+    VBox vbBtnConsultar = new VBox(10);
+    vbBtnConsultar.setAlignment(Pos.TOP_LEFT);
+    vbBtnConsultar.getChildren().addAll(btnConsultar, btnGenerarPdf, btnEliminarCurso);
+
+    /**
+     * Caja horizontal para el panel de la tabla de cursos y la caja vertical que 
+     * contiene el conjunto de botones para las funciones del plan de estudio
+     */
+    HBox hbTablaCursos = new HBox(10);
+    hbTablaCursos.setAlignment(Pos.TOP_LEFT);
+    hbTablaCursos.getChildren().addAll(spTablaCursos, vbBtnConsultar);
+    grid.add(hbTablaCursos, 0, 3, 4, 1);
     
-    Button btnEliminarCursoPlan = new Button("Eliminar curso");
-    grid.add(btnEliminarCursoPlan, 3, 6);
-    
+    //Seleccionar un curso
     Text tituloCurso = new Text("Consultar Cursos");
     tituloCurso.setFill(Color.WHITE);
     tituloCurso.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-    grid.add(tituloCurso, 0, 7);
-    
-    ListView<String> lstCursos = new ListView<>();
-    lstCursos.setPrefWidth(150);
-    lstCursos.setPrefHeight(100);
-    ListView<String> lstPlan = new ListView<>();
-    lstPlan.setPrefWidth(200);
-    lstPlan.setPrefHeight(100);    
-    ListView<String> lstRequisitos = new ListView<>();
-    lstRequisitos.setPrefWidth(150);
-    lstRequisitos.setPrefHeight(100);    
-    ListView<String> lstCorrequisitos = new ListView<>();
-    lstCorrequisitos.setPrefWidth(150);
-    lstCorrequisitos.setPrefHeight(100);
-    HBox hbLists = new HBox(10);
-    hbLists.setAlignment(Pos.CENTER);
-    hbLists.getChildren().addAll(lstCursos, lstPlan, lstRequisitos, lstCorrequisitos);
-    grid.add(hbLists, 0, 8, 4, 1);
-    
-    ObservableList<String> itmsPlan = 
-        FXCollections.observableArrayList ("Planes de estudio:");
-    lstPlan.setItems(itmsPlan);
-    ObservableList<String> itmsRequisitos = 
-        FXCollections.observableArrayList ("Requisitos:");
-    lstRequisitos.setItems(itmsRequisitos);
-    ObservableList<String> itmsCorrequisitos =
-        FXCollections.observableArrayList ("Correquisitos:");
-    lstCorrequisitos.setItems(itmsCorrequisitos);
-    
+    grid.add(tituloCurso, 0, 4);
+    Label lblCodigoCurso = new Label("Codigo:");
+    grid.add(lblCodigoCurso, 1, 4);
+    //Lista desplegable de codigo de cursos
+    ComboBox bxCurso = new ComboBox();
+    grid.add(bxCurso, 2, 4);
+    //Se activa al seleccionar un curso de la lista desplagable 
+    bxCurso.setOnAction((Event ev) -> {
+      curso = bxEscuela.getSelectionModel().getSelectedItem().toString();    
+    });
+    //Boton para eliminar un plan de estudio, requisito o correquisito del curso 
     Button btnEliminar = new Button("Eliminar");
-    grid.add(btnEliminar, 3, 9);
+    grid.add(btnEliminar, 3, 4);
     
+    //Tabla de planes de estudio que presentan el curso
+    Text lblTablaPlanes = new Text("Planes de estudio que presentan el curso");
+    lblTablaPlanes.setFill(Color.WHITE);
+    lblTablaPlanes.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+    TableView tablaPlanes = new TableView();
+    //Columnas de la tabla de planes de estudio
+    TableColumn colNumero = new TableColumn("Numero");
+    colNumero.setMinWidth(50);
+    colNumero.setCellValueFactory( new PropertyValueFactory<>("numero"));
+    TableColumn colEscuela = new TableColumn("Escuela");
+    colEscuela.setMinWidth(50);
+    colEscuela.setCellValueFactory( new PropertyValueFactory<>("escuela"));
+    TableColumn colVigencia = new TableColumn("Vigencia");
+    colVigencia.setMinWidth(100);
+    colVigencia.setCellValueFactory( new PropertyValueFactory<>("vigencia"));
+    colBloque.setCellValueFactory( new PropertyValueFactory<>("bloque"));
+    //Agrega las columnas creadas a la tabla de planes de estudio
+    tablaPlanes.getColumns().addAll(colNumero, colEscuela, colVigencia, colBloque);
+    //Panel con barra de desplazamiento en la que se situa la tabla de planes de estudio
+    ScrollPane spTablaPlanes = new ScrollPane();
+    spTablaPlanes.setHbarPolicy(ScrollBarPolicy.NEVER);
+    spTablaPlanes.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+    spTablaPlanes.setVmax(200);
+    spTablaPlanes.setHmax(375);
+    spTablaPlanes.setPrefSize(375, 200);
+    spTablaPlanes.setContent(tablaPlanes);
+    //Caja vertical para agrupar la tabla de planes de estudio y la etiqueta de esta
+    VBox vbTablaPlanes = new VBox(10);
+    vbTablaPlanes.setAlignment(Pos.TOP_LEFT);
+    vbTablaPlanes.getChildren().addAll(lblTablaPlanes, spTablaPlanes);
+    
+    //Tabla de requisitos y correquisitos
+    Text lblTablaReqs = new Text("Requisitos y correquisitos del curso");
+    lblTablaReqs.setFill(Color.WHITE);
+    lblTablaReqs.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+    TableView tablaReqs = new TableView();
+    //Columnas de la tabla de requisitos y correquisitos
+    TableColumn colRelacion = new TableColumn("Relacion");
+    colRelacion.setMinWidth(100);
+    colRelacion.setCellValueFactory( new PropertyValueFactory<>("relacion"));
+    TableColumn colNombreR = new TableColumn("Nombre");
+    colNombreR.setMinWidth(126);
+    colNombreR.setCellValueFactory( new PropertyValueFactory<>("relacion"));
+    //Agrega las columnas creadas a la tabla de requisitos y correquisitos
+    tablaReqs.getColumns().addAll(colRelacion, colCodigo, colNombreR, colHoras, colCreditos);
+    //Panel con barra de desplazamiento en la que se situa la tabla de requisitos y correquisitos
+    ScrollPane spTablaReqs = new ScrollPane();
+    spTablaReqs.setHbarPolicy(ScrollBarPolicy.NEVER);
+    spTablaReqs.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+    spTablaReqs.setVmax(200);
+    spTablaReqs.setHmax(500);
+    spTablaReqs.setPrefSize(500, 200);
+    spTablaReqs.setContent(tablaReqs);
+    //Caja vertical para agrupar la tabla de requisitos y correquisitos y la etiqueta de esta
+    VBox vbTablaReqs = new VBox(10);
+    vbTablaReqs.setAlignment(Pos.TOP_LEFT);
+    vbTablaReqs.getChildren().addAll(lblTablaReqs, spTablaReqs);
+    
+    /**
+     * Caja horizontal para agrupar las cajas verticales de las tablas de planes 
+     * de estudio y la tabla de requisitos y correquisitos 
+     */
+    HBox hbTablas = new HBox(10);
+    hbTablas.setAlignment(Pos.TOP_LEFT);
+    hbTablas.getChildren().addAll(vbTablaPlanes, vbTablaReqs);
+    grid.add(hbTablas, 0, 5, 4, 1);
+    
+    //Conjunto de botones para abrir otras ventanas
     Button btnEscuela = new Button("Registrar Escuela");
     Button btnCurso = new Button("Registrar Curso");
-    Button btnPlan = new Button("Registrar Plan");
+    Button btnPlan = new Button("Registrar Plan de Estudio");
     Button btnCursoReq = new Button("Registrar Requisitos de Curso");
     HBox hbBtn = new HBox(20);
     hbBtn.setAlignment(Pos.CENTER);
     hbBtn.getChildren().addAll(btnEscuela, btnCurso, btnPlan, btnCursoReq);
-    grid.add(hbBtn, 0, 11, 4, 1);
+    grid.add(hbBtn, 0, 6, 4, 1);
     
-    btnGenerarPdf.setOnAction((ActionEvent e) -> {
-        Stage stage = new Stage();
-        InputBox ventana = new InputBox();
-        ventana.start("Enviar correo","Ingrese su correo electronico");
+    //Consultar los cursos pertenecientes al plan de estudio seleccionado
+    btnConsultar.setOnAction((ActionEvent e) -> {        
     });
     
+    /**
+     * Abre un cuador de dialogo con un espacio para ingresar el correo al que se
+     * enviara le PDF generado
+     */
+    btnGenerarPdf.setOnAction((ActionEvent e) -> {
+      TextInputDialog dialog = new TextInputDialog("walter");
+      dialog.setTitle("Enviar plan de estudio");
+      dialog.setHeaderText("Enviar PDF del plan de estudio");
+      dialog.setContentText("Ingrese su correo electronico:");
+      Optional<String> result = dialog.showAndWait();
+      // Traditional way to get the response value.
+      if (result.isPresent()){
+        System.out.println("Your name: " + result.get());
+      }
+      // The Java 8 way to get the response value (with lambda expression). 
+      result.ifPresent(name -> System.out.println("Your name: " + name));
+        
+    });
+    
+    //Eliminar el curso seleccionado de la tabla de cursos
+    btnEliminarCurso.setOnAction((ActionEvent e) -> {        
+    });
+    
+    /**
+     * Eliminar plan de estudio, requisito o corresquisito de un curso dependiendo
+     * de cual fue la ultimo tabla selecionado y la relacion que tenga con el curso
+     */
+    btnEliminar.setOnAction((ActionEvent e) -> {        
+    });
+    
+    //Abre la ventana de registro de escuela o area academica
     btnEscuela.setOnAction((ActionEvent e) -> {
         Stage stage = new Stage();
         RegistroEscuela ventana = new RegistroEscuela();
         ventana.start(stage);
     });
     
+    //Abre la ventana de registro de curso
     btnCurso.setOnAction((ActionEvent e) -> {
         Stage stage = new Stage();
         RegistroCurso ventana = new RegistroCurso();
         ventana.start(stage);
     });
     
+    //Abre la ventana de registro de plan de estudio
     btnPlan.setOnAction((ActionEvent e) -> {
         Stage stage = new Stage();
         RegistroPlanEstudio ventana = new RegistroPlanEstudio();
         ventana.start(stage);
     });
     
+    //Abre la ventana de registro de requisitos y correquisitos de un curso
     btnCursoReq.setOnAction((ActionEvent e) -> {
         Stage stage = new Stage();
         RegistroReqCurso ventana = new RegistroReqCurso();
@@ -203,32 +292,11 @@ public class Inicio extends Application {
     });
     
     primaryStage.show();
-    /*
-    Button btnEliminarCurso = new Button("Eliminar curso");
-    Button btnEliminarPlan = new Button("Eliminar plan");
-    Button btnEliminarRequisito = new Button("Eliminar requisito");
-    Button btnEliminarCorrequisito = new Button("Eliminar correquisito");
-    HBox hbBtnEliminar = new HBox(20);
-    hbBtnEliminar.setAlignment(Pos.CENTER);
-    hbBtnEliminar.getChildren().add(btnEliminarCurso);
-    hbBtnEliminar.getChildren().add(btnEliminarPlan);
-    hbBtnEliminar.getChildren().add(btnEliminarRequisito);
-    hbBtnEliminar.getChildren().add(btnEliminarCorrequisito);
-    grid.add(hbBtnEliminar, 0, 9, 4, 1);
-    
-    
-    
-    final Text lblError = new Text();
-    lblError.setFill(Color.FIREBRICK);
-    lblError.setFont(Font.font("Arial", FontWeight.BOLD, 12));
-    grid.add(lblError, 3, 9);*/
-    
-    btnEliminarCursoPlan.setOnAction((ActionEvent e) -> {        
-    });
   }
 
 
   /**
+   * Metdo main para iniciar la aplicacion
    * @param args the command line arguments
    */
   public static void main(String[] args) {

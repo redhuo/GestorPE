@@ -1,8 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Ventana de registro requisitos y correquisitos de un curso
+ * @author WonMi Lim y Jimmy Tsang
  */
+
 package aplicacion;
 
 import javafx.event.ActionEvent;
@@ -21,16 +21,16 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-/**
- *
- * @author wonmi
- */
 public class RegistroReqCurso {
   String escuela;
   String curso;
   String requisito;
   String correquisito;
   
+  /**
+   * Inicializa la ventana
+   * @param primaryStage 
+   */
   public void start(Stage primaryStage) {
     primaryStage.setTitle("Registro de Requisitos");        
     primaryStage.show();

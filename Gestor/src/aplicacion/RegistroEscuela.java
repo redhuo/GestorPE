@@ -1,7 +1,6 @@
 /**
- * Inicio de Sesion de la aplicacion
- * @author wonmi
- * @version 1.0
+ * Ventana de registro de escuela o area academica
+ * @author WonMi Lim y Jimmy Tsang
  */
 
 package aplicacion;
@@ -25,6 +24,10 @@ public class RegistroEscuela {
   String nombre;
   String codigo;
   
+  /**
+   * Inicializa la ventana
+   * @param primaryStage 
+   */
   public void start(Stage primaryStage) {
     primaryStage.setTitle("Registro de Escuela");   
     

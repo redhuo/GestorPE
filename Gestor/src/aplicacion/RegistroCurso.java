@@ -1,12 +1,10 @@
 /**
- * Inicio de Sesion de la aplicacion
- * @author wonmi
- * @version 1.0
+ * Ventana de registro de curso
+ * @author WonMi Lim y Jimmy Tsang
  */
 
 package aplicacion;
 
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.geometry.Insets;
@@ -31,6 +29,10 @@ public class RegistroCurso {
   String creditos;
   String horasLectivas;
     
+  /**
+   * Inicializa la ventana
+   * @param primaryStage 
+   */
   public void start(Stage primaryStage) {
     primaryStage.setTitle("Registro de Curso");   
     
