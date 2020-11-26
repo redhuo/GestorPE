@@ -6,17 +6,14 @@
 package dao;
 
 import utils.SQLConnection;
-import java.util.*;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import modelo.Curso;
-import modelo.Escuela;
 
 /**
  *
@@ -92,12 +89,12 @@ public class CursoDAO {
       }
   }
   
-  public ArrayList<Curso> getCursosPorEscuela(String codigoEscuela){
+  public LinkedList<Curso> getCursosPorEscuela(String codigoEscuela){
     String sql = "select * from escuela_curso where codigo_escuela = ?";
     String sql2 = "select * from curso where codigo= ?";
     PreparedStatement statement;
     String codigoCurso = "";
-    ArrayList<Curso> cursos = new ArrayList<Curso>();
+    LinkedList<Curso> cursos = new LinkedList<Curso>();
     conexion = conexionSqlite.connect();
     try {
       statement = conexion.prepareStatement(sql);
@@ -117,7 +114,8 @@ public class CursoDAO {
       statement.setString(1,codigoCurso);
       ResultSet resultado = statement.executeQuery();
       if (resultado.next()) {
-	Curso nuevo = new Curso(resultado.getString("codigo"), resultado.getString("nombre"), resultado.getInt("creditos"), resultado.getInt("hora_lectivas"));
+	Curso nuevo = new Curso(resultado.getString("codigo"), resultado.getString("nombre"), 
+            resultado.getInt("creditos"), resultado.getInt("hora_lectivas"), codigoEscuela);
         cursos.add(nuevo);
         System.out.println(nuevo.getNombre());
       }

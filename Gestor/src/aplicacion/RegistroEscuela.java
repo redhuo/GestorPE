@@ -74,7 +74,7 @@ public class RegistroEscuela {
     lblError.setFont(Font.font("Arial", FontWeight.BOLD, 12));
     grid.add(lblError, 1, 5);
     
-    //Limpiar los campos de texto
+    //Limpia los campos de texto
     btnLimpiar.setOnAction((ActionEvent e) -> { 
       txtNombre.clear();
       txtCodigo.clear();
@@ -82,7 +82,7 @@ public class RegistroEscuela {
       codigo = null;
     });
     
-    //Registrar escuela o area academica
+    //Registra la escuela o area academica
     btnRegistrar.setOnAction((ActionEvent e) -> {        
       lblError.setText("Error en los datos ingresados");
     });

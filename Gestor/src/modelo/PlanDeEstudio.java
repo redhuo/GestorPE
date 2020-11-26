@@ -9,13 +9,12 @@ public class PlanDeEstudio {
   
   private int numero;
   private String fecha;
-  private String bloque;
-  private Escuela escuela;
-  private Curso curso;
+  private String escuela;
   
-  public PlanDeEstudio(int pNumero, String pFecha){
+  public PlanDeEstudio(int pNumero, String pFecha, String pEscuela){
     this.numero = pNumero;
     this.fecha = pFecha;
+    this.escuela = pEscuela;
   }
 
   public int getNumero() {
@@ -34,28 +33,12 @@ public class PlanDeEstudio {
     this.fecha = fecha;
   }
 
-  public String getBloque() {
-    return bloque;
-  }
-
-  public void setBloque(String bloque) {
-    this.bloque = bloque;
-  }
-
-  public Escuela getEscuela() {
+  public String getEscuela() {
     return escuela;
   }
 
-  public void setEscuela(Escuela escuela) {
+  public void setEscuela(String escuela) {
     this.escuela = escuela;
-  }
-
-  public Curso getCurso() {
-    return curso;
-  }
-
-  public void setCurso(Curso curso) {
-    this.curso = curso;
   }
   
 }

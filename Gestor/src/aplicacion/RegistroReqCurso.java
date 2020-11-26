@@ -107,12 +107,12 @@ public class RegistroReqCurso {
     vbBtn.getChildren().addAll(lblError, btnCerrar);
     grid.add(vbBtn, 0, 4, 2, 1);
     
-    //Registrar los cursos que son requisito para el curso
+    //Registra los cursos que son requisito para el curso
     btnRegistrarReq.setOnAction((ActionEvent e) -> {        
       requisito = bxRequisito.getSelectionModel().getSelectedItem().toString();
     });
     
-    //Registrar los cursos que son correquisito para el curso
+    //Registra los cursos que son correquisito para el curso
     btnRegistrarCo.setOnAction((ActionEvent e) -> {        
       correquisito = bxCorrequisito.getSelectionModel().getSelectedItem().toString();
     });

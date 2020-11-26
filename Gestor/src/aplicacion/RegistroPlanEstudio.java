@@ -125,19 +125,19 @@ public class RegistroPlanEstudio {
     hbBtn.getChildren().addAll(btnLimpiar, btnCerrar);
     grid.add(hbBtn, 1, 9);
     
-    //Limpiar los campos de texto
+    //Limpia los campos de texto
     btnLimpiar.setOnAction((ActionEvent e) -> { 
       txtCodigo.clear();
       txtFecha.clear();
       txtCurso.clear();
     });
     
-    //Registrar plan de estudio
+    //Registra el plan de estudio
     btnRegistrar.setOnAction((ActionEvent e) -> {        
       lblError.setText("Error en los datos ingresados");
     }); 
     
-    //Registrar curso al plan de estudio
+    //Registra un curso al plan de estudio
     btnRegistrarCurso.setOnAction((ActionEvent e) -> {        
       lblError.setText("Error en los datos ingresados");
     }); 

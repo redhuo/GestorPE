@@ -9,17 +9,16 @@ public class Curso {
   
   private String codigo;
   private String nombre;
+  private String escuela;
   private int creditos;
   private int horasLectivas;
-  private Escuela escuela;
-  private Curso requisitos;
-  private Curso correquisitos;
   
-  public Curso(String pCodigo,String pNombre, int pCreditos, int pHorasLectivas){
+  public Curso(String pCodigo,String pNombre, int pCreditos, int pHorasLectivas, String pEscuela){
     this.codigo = pCodigo;
     this.nombre = pNombre;
     this.creditos = pCreditos;
     this.horasLectivas = pHorasLectivas;
+    this.escuela = pEscuela;
   }
 
   public String getCodigo() {
@@ -53,29 +52,12 @@ public class Curso {
   public void setHorasLectivas(int horasLectivas) {
     this.horasLectivas = horasLectivas;
   }
-
-  public Escuela getEscuela() {
+  
+  public String getEscuela() {
     return escuela;
   }
 
-  public void setEscuela(Escuela escuela) {
+  public void setEscuela(String escuela) {
     this.escuela = escuela;
   }
-
-  public Curso getRequisitos() {
-    return requisitos;
-  }
-
-  public void setRequisitos(Curso requisitos) {
-    this.requisitos = requisitos;
-  }
-
-  public Curso getCorrequisitos() {
-    return correquisitos;
-  }
-
-  public void setCorrequisitos(Curso correquisitos) {
-    this.correquisitos = correquisitos;
-  }
-  
 }

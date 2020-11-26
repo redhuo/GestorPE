@@ -108,11 +108,11 @@ public class RegistroCurso {
     lblError.setFont(Font.font("Arial", FontWeight.BOLD, 12));
     grid.add(lblError, 1, 7);
     
-    //Registrar curso
+    //Registra el curso
     btnRegistrar.setOnAction((ActionEvent e) -> { 
     });
     
-    //Limpiar los campos de texto
+    //Limpia los campos de texto
     btnLimpiar.setOnAction((ActionEvent e) -> { 
       txtNombre.clear();
       txtCodigo.clear();
