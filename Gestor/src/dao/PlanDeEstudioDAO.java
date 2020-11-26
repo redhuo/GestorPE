@@ -18,11 +18,11 @@ import utils.SQLConnection;
  *
  * @author Jimmy
  */
-public class PlanDeEstudioDao {
+public class PlanDeEstudioDAO {
   private SQLConnection conexionSqlite;
   private Connection conexion;
   
-  public PlanDeEstudioDao(){
+  public PlanDeEstudioDAO(){
     conexionSqlite = new SQLConnection();
   }
   public void insertarNuevoPlan(PlanDeEstudio nuevo,String escuela){
