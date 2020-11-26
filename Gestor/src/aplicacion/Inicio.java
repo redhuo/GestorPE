@@ -50,7 +50,7 @@ public class Inicio extends Application {
     
     //Carga los recurso de un archivo css
     scene.getStylesheets().add(
-        RegistroEscuela.class.getResource("/css/General.css").toExternalForm());
+    RegistroEscuela.class.getResource("/css/General.css").toExternalForm());
     primaryStage.setScene(scene);
     
     //Seleccionar una escuela o area academica

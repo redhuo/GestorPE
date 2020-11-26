@@ -15,7 +15,6 @@
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
             <name>Gestor</name>
             <source-roots>
-                <root id="src.jdk1.8.0_251.dir"/>
                 <root id="src.dir"/>
             </source-roots>
             <test-roots>
