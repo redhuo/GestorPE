@@ -79,6 +79,7 @@ public class EscuelaDAO {
         while(resultado.next()) {
 	  Escuela escuela = new Escuela(resultado.getString("codigo"), resultado.getString("nombre"));
           listaEscuela.add(escuela);
+          System.out.println(resultado.getString("nombre"));
         }
         resultado.close();
         statement.close();
@@ -92,6 +93,7 @@ public class EscuelaDAO {
   public static void main (String[] args){
     EscuelaDAO escuela = new EscuelaDAO();
     Escuela nuevo = new Escuela("IC","Escuela de Ingeniería en Computación");
-    escuela.insertarNuevaEscuela(nuevo);
+    //escuela.insertarNuevaEscuela(nuevo);
+    System.out.println(escuela.getEscuela(nuevo).getNombre());
   }
 }

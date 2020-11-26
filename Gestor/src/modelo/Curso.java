@@ -20,12 +20,11 @@ public class Curso {
   private Curso requisitos;
   private Curso correquisitos;
   
-  public Curso(String pCodigo,String pNombre, int pCreditos, int pHorasLectivas,Escuela pEscuela){
+  public Curso(String pCodigo,String pNombre, int pCreditos, int pHorasLectivas){
     this.codigo = pCodigo;
     this.nombre = pNombre;
     this.creditos = pCreditos;
     this.horasLectivas = pHorasLectivas;
-    this.escuela = pEscuela; 
   }
 
   public String getCodigo() {
