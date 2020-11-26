@@ -39,6 +39,7 @@ public class RegistroEscuela {
     
     Scene scene = new Scene(grid, 400, 210);
     
+    //Carga los recurso de un archivo css
     scene.getStylesheets().add(
         RegistroEscuela.class.getResource("/css/General.css").toExternalForm());
     primaryStage.setScene(scene);
@@ -48,15 +49,15 @@ public class RegistroEscuela {
     titulo.setFont(Font.font("Arial", FontWeight.BOLD, 16));
     grid.add(titulo, 0, 0, 2, 1);
 
+    //Campo de texto para el nombre
     Label lblNombre = new Label("Nombre:");
     grid.add(lblNombre, 0, 1);
-
     TextField txtNombre = new TextField();
     grid.add(txtNombre, 1, 1);
 
+    //Campo de texto para el codigo
     Label lblCodigo = new Label("Codigo:");
     grid.add(lblCodigo, 0, 2);
-
     TextField txtCodigo = new TextField();
     grid.add(txtCodigo, 1, 2);
     
@@ -73,6 +74,7 @@ public class RegistroEscuela {
     lblError.setFont(Font.font("Arial", FontWeight.BOLD, 12));
     grid.add(lblError, 1, 5);
     
+    //Limpiar los campos de texto
     btnLimpiar.setOnAction((ActionEvent e) -> { 
       txtNombre.clear();
       txtCodigo.clear();
@@ -80,6 +82,7 @@ public class RegistroEscuela {
       codigo = null;
     });
     
+    //Registrar escuela o area academica
     btnRegistrar.setOnAction((ActionEvent e) -> {        
       lblError.setText("Error en los datos ingresados");
     });

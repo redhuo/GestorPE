@@ -7,13 +7,13 @@ package dao;
 
 import modelo.Escuela;
 import utils.SQLConnection;
-import java.util.*;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -71,7 +71,7 @@ public class EscuelaDAO {
   public ArrayList<Escuela> getEscuelas(){
     String sql = "select * from escuela";
     Statement statement;
-    ArrayList<Escuela> listaEscuela = new ArrayList<Escuela>();
+    ArrayList<Escuela> listaEscuela = new ArrayList<>();
     conexion = conexionSqlite.connect();
       try {
         statement = conexion.createStatement();

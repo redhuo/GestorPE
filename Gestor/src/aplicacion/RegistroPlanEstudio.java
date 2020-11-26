@@ -65,13 +65,13 @@ public class RegistroPlanEstudio {
       escuela = bxEscuela.getSelectionModel().getSelectedItem().toString();    
     });
 
-    //Ingresar codigo del plan de estudio 
+    //Campo de texto para codigo del plan de estudio 
     Label lblCodigo = new Label("Codigo:");
     grid.add(lblCodigo, 0, 2);
     TextField txtCodigo = new TextField();
     grid.add(txtCodigo, 1, 2);
     
-    //Ingresar la fecha de vigencia
+    //Campo de texto para la fecha de vigencia
     Label lblFecha = new Label("Vigencia:");
     grid.add(lblFecha, 0, 3);    
     TextField txtFecha = new TextField();
@@ -84,7 +84,7 @@ public class RegistroPlanEstudio {
     hbBtnRegistrar.getChildren().add(btnRegistrar);
     grid.add(hbBtnRegistrar, 0, 4, 2, 1);
     
-    //Registrar los cursos pertenecientes a este plan de estudio
+    //Campo de texto para los cursos pertenecientes a este plan de estudio
     Label lblCurso = new Label("Codigo del curso:");
     grid.add(lblCurso, 0, 5);    
     TextField txtCurso = new TextField();

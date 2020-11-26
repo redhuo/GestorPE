@@ -44,6 +44,7 @@ public class RegistroCurso {
     
     Scene scene = new Scene(grid, 400, 300);
     
+    //Carga los recurso de un archivo css
     scene.getStylesheets().add(
         RegistroEscuela.class.getResource("/css/General.css").toExternalForm());
     primaryStage.setScene(scene);
@@ -53,24 +54,26 @@ public class RegistroCurso {
     titulo.setFont(Font.font("Arial", FontWeight.BOLD, 16));
     grid.add(titulo, 0, 0, 2, 1);
 
-    Label lblEscuela = new Label("Escuela propietaria del curso:");
+    //Seleccionar una escuela o area academica
+    Label lblEscuela = new Label("Escuela propietaria del plan:");
     grid.add(lblEscuela, 0, 1);
-    
+    //Lista desplegable de escuelas o areas academicas
     ComboBox bxEscuela = new ComboBox();
     grid.add(bxEscuela, 1, 1);    
+    //Se activa al seleccionar una escuela de la lista desplagable
     bxEscuela.setOnAction((Event ev) -> {
       escuela = bxEscuela.getSelectionModel().getSelectedItem().toString();    
     });
 
+    //Campo de texto para el nombre
     Label lblNombre = new Label("Nombre:");
     grid.add(lblNombre, 0, 2);
-    
     TextField txtNombre = new TextField();
     grid.add(txtNombre, 1, 2);
 
+    //Campo de texto para el codigo
     Label lblCodigo = new Label("Codigo:");
     grid.add(lblCodigo, 0, 3);
-    
     Label lblCodigoEscuela = new Label("");
     TextField txtCodigo = new TextField();
     HBox hbCodigo = new HBox(10);
@@ -78,17 +81,16 @@ public class RegistroCurso {
     hbCodigo.getChildren().addAll(lblCodigoEscuela, txtCodigo);
     grid.add(hbCodigo, 1, 3);
     
-    
+    //Lista desplegable de numeros del 0 al 4 para los creditos 
     Label lblCreditos = new Label("Creditos:");
     grid.add(lblCreditos, 0, 4);
-    
     ComboBox bxCreditos = new ComboBox();
     grid.add(bxCreditos, 1, 4);
     bxCreditos.getItems().addAll("0", "1", "2", "3", "4");
     
+    //Lista desplegable de numeros del 1 al 5 para las horas 
     Label lblHoras = new Label("Horas lectivas:");
     grid.add(lblHoras, 0, 5);
-    
     ComboBox bxHoras = new ComboBox();
     grid.add(bxHoras, 1, 5);
     bxHoras.getItems().addAll("1", "2", "3", "4", "5");
@@ -106,6 +108,11 @@ public class RegistroCurso {
     lblError.setFont(Font.font("Arial", FontWeight.BOLD, 12));
     grid.add(lblError, 1, 7);
     
+    //Registrar curso
+    btnRegistrar.setOnAction((ActionEvent e) -> { 
+    });
+    
+    //Limpiar los campos de texto
     btnLimpiar.setOnAction((ActionEvent e) -> { 
       txtNombre.clear();
       txtCodigo.clear();
