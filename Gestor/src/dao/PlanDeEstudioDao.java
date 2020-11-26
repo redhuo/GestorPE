@@ -25,7 +25,7 @@ public class PlanDeEstudioDao {
   public PlanDeEstudioDao(){
     conexionSqlite = new SQLConnection();
   }
- /* public void insertarNuevaEscuela(PlanDeEstudio nuevo){
+  public void insertarNuevoPlan(PlanDeEstudio nuevo){
     String sql = "insert into plan_de_estudio(codigo,nombre) values(?,?)";
     PreparedStatement statement;
     conexion = conexionSqlite.connect();
@@ -39,6 +39,6 @@ public class PlanDeEstudioDao {
     catch (SQLException ex) {
       Logger.getLogger(EscuelaDAO.class.getName()).log(Level.SEVERE, null, ex);
     }
-  }*/
+  }
   
 }
