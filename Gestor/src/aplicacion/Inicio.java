@@ -6,10 +6,17 @@
 
 package aplicacion;
 
+import dao.CursoDao;
+import dao.EscuelaDao;
+import dao.PlanDeEstudioDao;
+import java.util.ArrayList;
 import java.util.Optional;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -30,11 +37,25 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import modelo.Curso;
+import modelo.Escuela;
+import modelo.PlanDeEstudio;
 
 public class Inicio extends Application {
+  String curso;
   String escuela;
   int plan;
-  String curso;
+  ArrayList<Escuela> escuelas;
+  ArrayList<PlanDeEstudio> planesDeEstudio;
+  ArrayList<Curso> cursos;
+  ArrayList<Curso> requisitos;
+  ArrayList<Curso> correquisitos;
+  ObservableList<Curso> planCursos;
+  ObservableList<PlanDeEstudio> cursoPlanes;
+  ObservableList<Curso> cursoRequisitos;
+  EscuelaDao escuelaDao;
+  PlanDeEstudioDao planDeEstudioDao;
+  CursoDao cursoDao;
     
   @Override
   public void start(Stage primaryStage) {
@@ -57,14 +78,10 @@ public class Inicio extends Application {
     Text titulo = new Text("Escuela propietaria:");
     titulo.setFill(Color.WHITE);
     titulo.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-    grid.add(titulo, 0, 0);
+    grid.add(titulo, 0, 0, 4, 1);
     //Lista desplegable de escuelas o areas academicas
     ComboBox bxEscuela = new ComboBox();
-    grid.add(bxEscuela, 1, 0);  
-    //Se activa al seleccionar una escuela de la lista desplagable
-    bxEscuela.setOnAction((Event ev) -> {
-      escuela = bxEscuela.getSelectionModel().getSelectedItem().toString();    
-    });
+    grid.add(bxEscuela, 1, 1);  
     
     //Seleccionar un plan de estudio
     Text tituloPlan = new Text("Consultar Plan de Estudio");
@@ -78,10 +95,6 @@ public class Inicio extends Application {
     grid.add(bxPlan, 2, 1); 
     Label lblFecha = new Label("Vigencia:");
     grid.add(lblFecha, 3, 1);
-    //Se activa al seleccionar un plan de estudio de la lista desplagable 
-    bxPlan.setOnAction((Event ev) -> {
-      plan = Integer.parseInt(bxEscuela.getSelectionModel().getSelectedItem().toString());    
-    });
     
     //Tabla de cursos pertenecientes al plan de estudio
     Text lblTablaCursos = new Text("Cursos del plan de estudio");
@@ -144,10 +157,6 @@ public class Inicio extends Application {
     //Lista desplegable de codigo de cursos
     ComboBox bxCurso = new ComboBox();
     grid.add(bxCurso, 2, 4);
-    //Se activa al seleccionar un curso de la lista desplagable 
-    bxCurso.setOnAction((Event ev) -> {
-      curso = bxEscuela.getSelectionModel().getSelectedItem().toString();    
-    });
     //Boton para eliminar un plan de estudio, requisito o correquisito del curso 
     Button btnEliminar = new Button("Eliminar");
     grid.add(btnEliminar, 3, 4);
@@ -166,7 +175,7 @@ public class Inicio extends Application {
     colEscuela.setCellValueFactory( new PropertyValueFactory<>("escuela"));
     TableColumn colVigencia = new TableColumn("Vigencia");
     colVigencia.setMinWidth(100);
-    colVigencia.setCellValueFactory( new PropertyValueFactory<>("vigencia"));
+    colVigencia.setCellValueFactory( new PropertyValueFactory<>("fechaVigencia"));
     colBloque.setCellValueFactory( new PropertyValueFactory<>("bloque"));
     //Agrega las columnas creadas a la tabla de planes de estudio
     tablaPlanes.getColumns().addAll(colNumero, colEscuela, colVigencia, colBloque);
@@ -188,15 +197,11 @@ public class Inicio extends Application {
     lblTablaReqs.setFill(Color.WHITE);
     lblTablaReqs.setFont(Font.font("Arial", FontWeight.BOLD, 14));
     TableView tablaReqs = new TableView();
-    //Columnas de la tabla de requisitos y correquisitos
-    TableColumn colRelacion = new TableColumn("Relacion");
-    colRelacion.setMinWidth(100);
-    colRelacion.setCellValueFactory( new PropertyValueFactory<>("relacion"));
     TableColumn colNombreR = new TableColumn("Nombre");
-    colNombreR.setMinWidth(126);
-    colNombreR.setCellValueFactory( new PropertyValueFactory<>("relacion"));
+    colNombreR.setMinWidth(176);
+    colNombreR.setCellValueFactory( new PropertyValueFactory<>("nombre"));
     //Agrega las columnas creadas a la tabla de requisitos y correquisitos
-    tablaReqs.getColumns().addAll(colRelacion, colCodigo, colNombreR, colHoras, colCreditos);
+    tablaReqs.getColumns().addAll(colCodigo, colNombreR, colEscuela, colHoras, colCreditos);
     //Panel con barra de desplazamiento en la que se situa la tabla de requisitos y correquisitos
     ScrollPane spTablaReqs = new ScrollPane();
     spTablaReqs.setHbarPolicy(ScrollBarPolicy.NEVER);
@@ -229,8 +234,69 @@ public class Inicio extends Application {
     hbBtn.getChildren().addAll(btnEscuela, btnCurso, btnPlan, btnCursoReq);
     grid.add(hbBtn, 0, 6, 4, 1);
     
-    //Consultar los cursos pertenecientes al plan de estudio seleccionado
-    btnConsultar.setOnAction((ActionEvent e) -> {        
+    //Cargar datos
+    escuelaDao = new EscuelaDao();
+    planDeEstudioDao = new PlanDeEstudioDao();
+    cursoDao = new CursoDao();
+    escuelas = escuelaDao.getEscuelas();
+    escuelas.forEach((e) -> {
+      bxEscuela.getItems().add(e.getNombre());
+    });
+    
+    /**
+     * Se activa al seleccionar una escuela de la lista desplagable
+     * recoge el codigo de la escuela para cargar los daros en las listas desplegables
+     * de planes de estudio y cursos
+     */
+    bxEscuela.setOnAction((Event ev) -> {
+      escuela = bxEscuela.getSelectionModel().getSelectedItem().toString();
+      for(Escuela e : escuelas){
+        if(e.getNombre() == escuela){
+          escuela = e.getCodigo();
+        }
+      }
+      planesDeEstudio = planDeEstudioDao.getPlanesDeEstudioPorEscuela(escuela);
+      planesDeEstudio.forEach((p) -> {
+          bxPlan.getItems().add(p.getNumero());
+        });
+      cursos = cursoDao.getCursosPorEscuela(escuela);
+      cursos.forEach((c) -> {
+        bxCurso.getItems().add(c.getCodigo());
+      });
+    });
+    
+    /**
+     * Se activa al seleccionar un plan de estudio de la lista desplagable
+     * carga los datos en la tabla de cursos pertenecientes al plan
+     */
+    bxPlan.setOnAction((Event ev) -> {
+      plan = Integer.parseInt(bxPlan.getSelectionModel().getSelectedItem().toString());
+      for(PlanDeEstudio p : planesDeEstudio){
+        if(p.getNumero() == plan){
+          lblFecha.setText("Vigencia: " + p.getFecha());
+        }
+      }
+      planCursos = cursoDao.getCursosPorPlan(plan);
+      tablaCursos.setItems(planCursos);
+    });
+    
+    /**
+     * Se activa al seleccionar un curso de la lista desplagable 
+     */
+    bxCurso.setOnAction((Event ev) -> {
+      curso = bxCurso.getSelectionModel().getSelectedItem().toString();
+      cursoPlanes = planDeEstudioDao.getPlanesDeEstudioPorCurso(curso);
+      requisitos = cursoDao.getCursosRequisitos(curso);
+      correquisitos = cursoDao.getCursosCorrequisitos(curso);
+      cursoRequisitos = FXCollections.observableArrayList();
+      requisitos.forEach((c) -> {
+        cursoRequisitos.add(c);
+      });
+      correquisitos.forEach((c) -> {
+        cursoRequisitos.add(c);
+      });
+      tablaPlanes.setItems(cursoPlanes);
+      tablaReqs.setItems(cursoRequisitos);
     });
     
     /**
@@ -293,7 +359,6 @@ public class Inicio extends Application {
     
     primaryStage.show();
   }
-
 
   /**
    * Metdo main para iniciar la aplicacion

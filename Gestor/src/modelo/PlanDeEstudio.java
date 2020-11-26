@@ -8,12 +8,12 @@ package modelo;
 public class PlanDeEstudio {
   
   private int numero;
-  private String fecha;
+  private String fechaVigencia;
   private String escuela;
   
   public PlanDeEstudio(int pNumero, String pFecha, String pEscuela){
     this.numero = pNumero;
-    this.fecha = pFecha;
+    this.fechaVigencia = pFecha;
     this.escuela = pEscuela;
   }
 
@@ -26,11 +26,11 @@ public class PlanDeEstudio {
   }
 
   public String getFecha() {
-    return fecha;
+    return fechaVigencia;
   }
 
   public void setFecha(String fecha) {
-    this.fecha = fecha;
+    this.fechaVigencia = fecha;
   }
 
   public String getEscuela() {

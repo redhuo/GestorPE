@@ -10,9 +10,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import modelo.Curso;
 
 /**
@@ -89,12 +91,12 @@ public class CursoDao {
       }
   }
   
-  public LinkedList<Curso> getCursosPorEscuela(String codigoEscuela){
+  public ArrayList<Curso> getCursosPorEscuela(String codigoEscuela){
     String sql = "select * from escuela_curso where codigo_escuela = ?";
     String sql2 = "select * from curso where codigo= ?";
     PreparedStatement statement;
     String codigoCurso = "";
-    LinkedList<Curso> cursos = new LinkedList<Curso>();
+    ArrayList<Curso> cursos = new ArrayList<Curso>();
     conexion = conexionSqlite.connect();
     try {
       statement = conexion.prepareStatement(sql);
@@ -119,6 +121,138 @@ public class CursoDao {
         cursos.add(nuevo);
         System.out.println(nuevo.getNombre());
       }
+      resultado.close();
+      statement.close();
+    } 
+    catch (SQLException ex) {
+      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return cursos; 
+  }
+  
+  public ObservableList<Curso> getCursosPorPlan(int plan){
+    String sql = "select * from bloque where numero_plan = ?";
+    String sql2 = "select * from curso where codigo = ?";
+    PreparedStatement statement;
+    ArrayList<String> codigos = new ArrayList<>();
+    ObservableList<Curso> cursos = FXCollections.observableArrayList();
+    conexion = conexionSqlite.connect();
+    try {
+      statement = conexion.prepareStatement(sql);
+      statement.setInt(1,plan);
+      ResultSet resultado = statement.executeQuery();
+      if (resultado.next()) {
+	codigos.add(resultado.getString("codigo_curso"));
+      }
+      resultado.close();
+      statement.close();
+    } 
+    catch (SQLException ex) {
+      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    try {
+      statement = conexion.prepareStatement(sql2);
+      ResultSet resultado = null;
+      for(String codigo : codigos){
+        statement.setString(1,codigo);
+        resultado = statement.executeQuery();
+        if (resultado.next()) {
+          Curso nuevo = new Curso(resultado.getString("codigo"), resultado.getString("nombre"), 
+              resultado.getInt("creditos"), resultado.getInt("hora_lectivas"), resultado.getString("codigo_escuela"));
+          cursos.add(nuevo);
+          System.out.println(nuevo.getNombre());
+        }
+      }      
+      resultado.close();
+      statement.close();
+    } 
+    catch (SQLException ex) {
+      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return cursos; 
+  }
+  
+  public ArrayList<Curso> getCursosRequisitos(String curso){
+    String sql = "select * from curso_requisito where codigo_curso = ?";
+    String sql2 = "select * from curso where codigo = ?";
+    PreparedStatement statement;
+    ArrayList<String> codigos = new ArrayList<>();
+    ArrayList<Curso> cursos = new ArrayList<>();
+    conexion = conexionSqlite.connect();
+    try {
+      statement = conexion.prepareStatement(sql);
+      statement.setString(1,curso);
+      ResultSet resultado = statement.executeQuery();
+      if (resultado.next()) {
+	codigos.add(resultado.getString("codigo_requisito"));
+      }
+      resultado.close();
+      statement.close();
+    } 
+    catch (SQLException ex) {
+      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    try {
+      statement = conexion.prepareStatement(sql2);
+      ResultSet resultado = null;
+      for(String codigo : codigos){
+        statement.setString(1,codigo);
+        resultado = statement.executeQuery();
+        if (resultado.next()) {
+          Curso nuevo = new Curso(resultado.getString("codigo"), resultado.getString("nombre"), 
+              resultado.getInt("creditos"), resultado.getInt("hora_lectivas"), resultado.getString("codigo_escuela"));
+          cursos.add(nuevo);
+          System.out.println(nuevo.getNombre());
+        }
+      }      
+      resultado.close();
+      statement.close();
+    } 
+    catch (SQLException ex) {
+      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return cursos; 
+  }
+  
+  public ArrayList<Curso> getCursosCorrequisitos(String curso){
+    String sql = "select * from curso_correquisito where codigo_curso = ? or codigo_correquisito = ?";
+    String sql2 = "select * from curso where codigo = ?";
+    PreparedStatement statement;
+    ArrayList<String> codigos = new ArrayList<>();
+    ArrayList<Curso> cursos = new ArrayList<>();
+    conexion = conexionSqlite.connect();
+    try {
+      statement = conexion.prepareStatement(sql);
+      statement.setString(1,curso);
+      statement.setString(2,curso);
+      ResultSet resultado = statement.executeQuery();
+      if (resultado.next()) {
+        if(resultado.getString("codigo_curso").equals(curso)){
+  	  codigos.add(resultado.getString("codigo_correquisito"));
+        }
+        else{
+          codigos.add(resultado.getString("codigo_curso"));
+        }
+      }
+      resultado.close();
+      statement.close();
+    } 
+    catch (SQLException ex) {
+      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    try {
+      statement = conexion.prepareStatement(sql2);
+      ResultSet resultado = null;
+      for(String codigo : codigos){
+        statement.setString(1,codigo);
+        resultado = statement.executeQuery();
+        if (resultado.next()) {
+          Curso nuevo = new Curso(resultado.getString("codigo"), resultado.getString("nombre"), 
+              resultado.getInt("creditos"), resultado.getInt("hora_lectivas"), resultado.getString("codigo_escuela"));
+          cursos.add(nuevo);
+          System.out.println(nuevo.getNombre());
+        }
+      }      
       resultado.close();
       statement.close();
     } 
