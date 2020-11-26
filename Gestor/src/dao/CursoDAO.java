@@ -161,5 +161,39 @@ public class CursoDAO {
     }
     return eliminado;
   }
-
+  
+  public boolean eliminarCurso(String curso){
+    
+    String sql = "select count(*) as total from plandeestudio_curso where codigo=?";
+    String sql2 = "DELETE FROM curso WHERE codigo=?";
+    PreparedStatement statement;
+    
+    try{
+      statement = conexion.prepareStatement(sql);
+      statement.setString(1,curso);
+      ResultSet resultado = statement.executeQuery();
+      if (resultado.next()) {
+        if(resultado.getInt("total")>0){
+          System.out.println("Curso se encuenra en un plan de estudio");
+          return false;
+        }
+      }
+      statement.close(); 
+    }
+    catch(SQLException ex){
+      Logger.getLogger(EscuelaDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    try{
+      statement = conexion.prepareStatement(sql2);
+      statement.setString(1,curso);
+      if(statement.executeUpdate() > 0){
+          return true;
+      };
+      statement.close(); 
+    }
+    catch(SQLException ex){
+      Logger.getLogger(EscuelaDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return false;
+  }
 }
