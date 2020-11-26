@@ -161,8 +161,5 @@ public class CursoDAO {
     }
     return eliminado;
   }
-  
-  
-  
-  
+
 }
