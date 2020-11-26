@@ -22,12 +22,12 @@ import java.util.logging.Logger;
  *
  * @author Jimmy
  */
-public class EscuelaDAO {
+public class EscuelaDao {
 
   private SQLConnection conexionSqlite;
   private Connection conexion;
   
-  public EscuelaDAO(){
+  public EscuelaDao(){
     conexionSqlite = new SQLConnection();
   }
   
@@ -43,7 +43,7 @@ public class EscuelaDAO {
         statement.close();
       } 
       catch (SQLException ex) {
-        Logger.getLogger(EscuelaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
       }
   }
   
@@ -63,7 +63,7 @@ public class EscuelaDAO {
         statement.close();
       } 
       catch (SQLException ex) {
-        Logger.getLogger(EscuelaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
       }
       return escuela;
   }
@@ -85,13 +85,13 @@ public class EscuelaDAO {
         statement.close();
       } 
       catch (SQLException ex) {
-        Logger.getLogger(EscuelaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
       }
       return listaEscuela;
   }
 
   public static void main (String[] args){
-    EscuelaDAO escuela = new EscuelaDAO();
+    EscuelaDao escuela = new EscuelaDao();
     Escuela nuevo = new Escuela("IC","Escuela de Ingeniería en Computación");
     //escuela.insertarNuevaEscuela(nuevo);
     System.out.println(escuela.getEscuela(nuevo).getNombre());

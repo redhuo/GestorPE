@@ -18,11 +18,11 @@ import utils.SQLConnection;
  *
  * @author Jimmy
  */
-public class PlanDeEstudioDAO {
+public class PlanDeEstudioDao {
   private SQLConnection conexionSqlite;
   private Connection conexion;
   
-  public PlanDeEstudioDAO(){
+  public PlanDeEstudioDao(){
     conexionSqlite = new SQLConnection();
   }
   public void insertarNuevoPlan(PlanDeEstudio nuevo,String escuela){
@@ -38,7 +38,7 @@ public class PlanDeEstudioDAO {
       statement.close();
     } 
     catch (SQLException ex) {
-      Logger.getLogger(EscuelaDAO.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
     }
     try {
       statement = conexion.prepareStatement(sql2);
@@ -48,7 +48,7 @@ public class PlanDeEstudioDAO {
       statement.close();
     } 
     catch (SQLException ex) {
-      Logger.getLogger(EscuelaDAO.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
   
@@ -64,7 +64,7 @@ public class PlanDeEstudioDAO {
       statement.close();
     } 
     catch (SQLException ex) {
-      Logger.getLogger(EscuelaDAO.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
   
@@ -79,7 +79,7 @@ public class PlanDeEstudioDAO {
       statement.close(); 
     }
     catch(SQLException ex){
-      Logger.getLogger(EscuelaDAO.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
     }
     return eliminado;
   }

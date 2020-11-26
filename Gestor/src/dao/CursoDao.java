@@ -19,12 +19,12 @@ import modelo.Curso;
  *
  * @author Jimmy
  */
-public class CursoDAO {
+public class CursoDao {
     
   private SQLConnection conexionSqlite;
   private Connection conexion;
   
-  public CursoDAO(){
+  public CursoDao(){
     conexionSqlite = new SQLConnection();
   }
   
@@ -43,7 +43,7 @@ public class CursoDAO {
       statement.close();
     } 
     catch (SQLException ex) {
-      Logger.getLogger(EscuelaDAO.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
     }
     try {
       statement = conexion.prepareStatement(sql2);
@@ -53,7 +53,7 @@ public class CursoDAO {
       statement.close();
     } 
     catch (SQLException ex) {
-      Logger.getLogger(EscuelaDAO.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
     }
       
   }
@@ -70,7 +70,7 @@ public class CursoDAO {
         statement.close();
       } 
       catch (SQLException ex) {
-        Logger.getLogger(EscuelaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
       }
   }
   public void insertarCorrequisito(String curso,String correquisito){
@@ -85,7 +85,7 @@ public class CursoDAO {
       statement.close();
       } 
       catch (SQLException ex) {
-        Logger.getLogger(EscuelaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
       }
   }
   
@@ -107,7 +107,7 @@ public class CursoDAO {
       statement.close();
     } 
     catch (SQLException ex) {
-      Logger.getLogger(EscuelaDAO.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
     }
     try {
       statement = conexion.prepareStatement(sql2);
@@ -123,7 +123,7 @@ public class CursoDAO {
       statement.close();
     } 
     catch (SQLException ex) {
-      Logger.getLogger(EscuelaDAO.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
     }
     return cursos; 
   }
@@ -139,7 +139,7 @@ public class CursoDAO {
       statement.close(); 
     }
     catch(SQLException ex){
-      Logger.getLogger(EscuelaDAO.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
     }
     return eliminado;
   }
@@ -155,7 +155,7 @@ public class CursoDAO {
       statement.close(); 
     }
     catch(SQLException ex){
-      Logger.getLogger(EscuelaDAO.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
     }
     return eliminado;
   }
@@ -179,7 +179,7 @@ public class CursoDAO {
       statement.close(); 
     }
     catch(SQLException ex){
-      Logger.getLogger(EscuelaDAO.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
     }
     try{
       statement = conexion.prepareStatement(sql2);
@@ -190,7 +190,7 @@ public class CursoDAO {
       statement.close(); 
     }
     catch(SQLException ex){
-      Logger.getLogger(EscuelaDAO.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
     }
     return false;
   }
