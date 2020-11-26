@@ -1,8 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Ventana de registro requisitos y correquisitos de un curso
+ * @author WonMi Lim y Jimmy Tsang
  */
+
 package aplicacion;
 
 import javafx.event.ActionEvent;
@@ -21,16 +21,16 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-/**
- *
- * @author wonmi
- */
 public class RegistroReqCurso {
   String escuela;
   String curso;
   String requisito;
   String correquisito;
   
+  /**
+   * Inicializa la ventana
+   * @param primaryStage 
+   */
   public void start(Stage primaryStage) {
     primaryStage.setTitle("Registro de Requisitos");        
     primaryStage.show();
@@ -43,6 +43,7 @@ public class RegistroReqCurso {
     
     Scene scene = new Scene(grid, 430, 350);
     
+    //Carga los recurso de un archivo css
     scene.getStylesheets().add(
         RegistroEscuela.class.getResource("/css/General.css").toExternalForm());
     primaryStage.setScene(scene);
@@ -52,28 +53,30 @@ public class RegistroReqCurso {
     titulo.setFont(Font.font("Arial", FontWeight.BOLD, 16));
     grid.add(titulo, 0, 0, 2, 1);
 
-    Label lblEscuela = new Label("Escuela propietaria del curso:");
+    //Seleccionar una escuela o area academica
+    Label lblEscuela = new Label("Escuela propietaria del plan:");
     grid.add(lblEscuela, 0, 1);
-    
+    //Lista desplegable de escuelas o areas academicas
     ComboBox bxEscuela = new ComboBox();
     grid.add(bxEscuela, 1, 1);    
+    //Se activa al seleccionar una escuela de la lista desplagable
     bxEscuela.setOnAction((Event ev) -> {
       escuela = bxEscuela.getSelectionModel().getSelectedItem().toString();    
     });
     
+    //Lista desplegable de codigo de cursos
     Label lblCurso = new Label("Codigo del curso:");
     grid.add(lblCurso, 0, 2);
-    
     ComboBox bxCurso = new ComboBox();
     grid.add(bxCurso, 1, 2);
+    //Se activa al seleccionar un curso de la lista desplagable 
     bxCurso.setOnAction((Event ev) -> {
       curso = bxEscuela.getSelectionModel().getSelectedItem().toString();    
     });
     
-    Label lblCurso1 = new Label("Codigo del curso:");
-    Label lblCurso2 = new Label("Codigo del curso:");
-    
+    //Lista desplegable de cursos para registrar los requisitos
     Text tituloRequisito = new Text("Requisitos del curso");
+    Label lblCurso1 = new Label("Codigo del curso:");
     tituloRequisito.setFill(Color.WHITE);
     tituloRequisito.setFont(Font.font("Arial", FontWeight.BOLD, 14));
     ComboBox bxRequisito = new ComboBox();
@@ -83,7 +86,9 @@ public class RegistroReqCurso {
     vbRequisito.getChildren().addAll(tituloRequisito,lblCurso1,bxRequisito,btnRegistrarReq);
     grid.add(vbRequisito, 0, 3);
     
+    //Lista desplegable de cursos para registrar los correquisitos
     Text tituloCorrequisito = new Text("Correquisitos del curso");
+    Label lblCurso2 = new Label("Codigo del curso:");
     tituloCorrequisito.setFill(Color.WHITE);
     tituloCorrequisito.setFont(Font.font("Arial", FontWeight.BOLD, 14));
     ComboBox bxCorrequisito = new ComboBox();
@@ -102,10 +107,12 @@ public class RegistroReqCurso {
     vbBtn.getChildren().addAll(lblError, btnCerrar);
     grid.add(vbBtn, 0, 4, 2, 1);
     
+    //Registrar los cursos que son requisito para el curso
     btnRegistrarReq.setOnAction((ActionEvent e) -> {        
       requisito = bxRequisito.getSelectionModel().getSelectedItem().toString();
     });
     
+    //Registrar los cursos que son correquisito para el curso
     btnRegistrarCo.setOnAction((ActionEvent e) -> {        
       correquisito = bxCorrequisito.getSelectionModel().getSelectedItem().toString();
     });
