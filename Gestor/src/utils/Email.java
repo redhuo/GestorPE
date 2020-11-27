@@ -48,9 +48,9 @@ public class Email {
     MimeMessage message = new MimeMessage(session);
     message.setFrom(new InternetAddress(from));
     message.setRecipients(Message.RecipientType.TO, toAddress);
-    message.setSubject("Recibo de Compra RapiExpress");
+    message.setSubject("Envio de plan de estudio");
     BodyPart messageBodyPart = new MimeBodyPart();
-    messageBodyPart.setText("Aqui esta adjunto el recivo de la compra #" + this.numeroPedido );
+    messageBodyPart.setText("Plan de Estudio");
     Multipart multipart = new MimeMultipart();
     multipart.addBodyPart(messageBodyPart);
     messageBodyPart = new MimeBodyPart();
