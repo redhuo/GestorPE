@@ -140,7 +140,7 @@ public class PlanDeEstudioDao {
   
   public boolean eliminarCursoDelPlan(String curso){
     boolean eliminado = false;
-    String sql = "DELETE FROM plandeestudio_curso WHERE codigo=?";
+    String sql = "DELETE FROM bloque WHERE codigo=?";
     PreparedStatement statement;
     try{
       statement = conexion.prepareStatement(sql);
