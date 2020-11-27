@@ -1,7 +1,7 @@
 /**
  * Ventana de inicio de la aplicacion, consulta de plan de estudio, consulta de
  * curso y eliminacion de curso y requisito y correquisito de un curso
- * @author WonMi Lim y Jimmy Tsang
+ * @author WonMi Lim
  */
 
 package aplicacion;
@@ -67,7 +67,7 @@ public class Inicio extends Application {
     grid.setVgap(15);
     grid.setPadding(new Insets(25));
     
-    Scene scene = new Scene(grid, 900, 650);
+    Scene scene = new Scene(grid, 950, 650);
     
     //Carga los recurso de un archivo css
     scene.getStylesheets().add(
@@ -81,7 +81,7 @@ public class Inicio extends Application {
     grid.add(titulo, 0, 0, 4, 1);
     //Lista desplegable de escuelas o areas academicas
     ComboBox bxEscuela = new ComboBox();
-    grid.add(bxEscuela, 1, 1);  
+    grid.add(bxEscuela, 1, 0);  
     
     //Seleccionar un plan de estudio
     Text tituloPlan = new Text("Consultar Plan de Estudio");
@@ -89,10 +89,12 @@ public class Inicio extends Application {
     tituloPlan.setFont(Font.font("Arial", FontWeight.BOLD, 16));
     grid.add(tituloPlan, 0, 1);
     Label lblCodigoPlan = new Label("Codigo:");
-    grid.add(lblCodigoPlan, 1, 1);
     //Lista desplegable de codigo de planes de estudio
     ComboBox bxPlan = new ComboBox();
-    grid.add(bxPlan, 2, 1); 
+    HBox hbPlan = new HBox(10);
+    hbPlan.setAlignment(Pos.CENTER);
+    hbPlan.getChildren().addAll(lblCodigoPlan, bxPlan);
+    grid.add(hbPlan, 1, 1);
     Label lblFecha = new Label("Vigencia:");
     grid.add(lblFecha, 3, 1);
     
@@ -131,12 +133,11 @@ public class Inicio extends Application {
     spTablaCursos.setContent(tablaCursos);
     
     //Conjunto de botones para las funciones del plan de estudio se ubica en una caja vertical
-    Button btnConsultar = new Button("Consultar");
     Button btnGenerarPdf = new Button("Generar PDF y enviar por correo");
     Button btnEliminarCurso = new Button("Eliminar curso");
     VBox vbBtnConsultar = new VBox(10);
     vbBtnConsultar.setAlignment(Pos.TOP_LEFT);
-    vbBtnConsultar.getChildren().addAll(btnConsultar, btnGenerarPdf, btnEliminarCurso);
+    vbBtnConsultar.getChildren().addAll(btnGenerarPdf, btnEliminarCurso);
 
     /**
      * Caja horizontal para el panel de la tabla de cursos y la caja vertical que 
@@ -153,10 +154,12 @@ public class Inicio extends Application {
     tituloCurso.setFont(Font.font("Arial", FontWeight.BOLD, 16));
     grid.add(tituloCurso, 0, 4);
     Label lblCodigoCurso = new Label("Codigo:");
-    grid.add(lblCodigoCurso, 1, 4);
     //Lista desplegable de codigo de cursos
     ComboBox bxCurso = new ComboBox();
-    grid.add(bxCurso, 2, 4);
+    HBox hbCurso = new HBox(10);
+    hbCurso.setAlignment(Pos.CENTER);
+    hbCurso.getChildren().addAll(lblCodigoCurso, bxCurso);
+    grid.add(hbCurso, 1, 4);
     //Boton para eliminar un plan de estudio, requisito o correquisito del curso 
     Button btnEliminar = new Button("Eliminar");
     grid.add(btnEliminar, 3, 4);
@@ -198,7 +201,7 @@ public class Inicio extends Application {
     lblTablaReqs.setFont(Font.font("Arial", FontWeight.BOLD, 14));
     TableView tablaReqs = new TableView();
     TableColumn colNombreR = new TableColumn("Nombre");
-    colNombreR.setMinWidth(176);
+    colNombreR.setMinWidth(170);
     colNombreR.setCellValueFactory( new PropertyValueFactory<>("nombre"));
     //Agrega las columnas creadas a la tabla de requisitos y correquisitos
     tablaReqs.getColumns().addAll(colCodigo, colNombreR, colEscuela, colHoras, colCreditos);
@@ -334,6 +337,7 @@ public class Inicio extends Application {
         Stage stage = new Stage();
         RegistroEscuela ventana = new RegistroEscuela();
         ventana.start(stage);
+        primaryStage.close();
     });
     
     //Abre la ventana de registro de curso

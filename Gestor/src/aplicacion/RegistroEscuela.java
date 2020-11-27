@@ -5,6 +5,7 @@
 
 package aplicacion;
 
+import dao.EscuelaDao;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,10 +20,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import modelo.Escuela;
 
 public class RegistroEscuela {
-  String nombre;
-  String codigo;
+  String codigo = null;
+  String nombre = null;
   
   /**
    * Inicializa la ventana
@@ -67,7 +69,7 @@ public class RegistroEscuela {
     HBox hbBtn = new HBox(10);
     hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
     hbBtn.getChildren().addAll(btnRegistrar, btnLimpiar, btnCerrar);
-    grid.add(hbBtn, 1, 4);
+    grid.add(hbBtn, 0, 4, 2, 1);
     
     final Text lblError = new Text();
     lblError.setFill(Color.FIREBRICK);
@@ -78,16 +80,29 @@ public class RegistroEscuela {
     btnLimpiar.setOnAction((ActionEvent e) -> { 
       txtNombre.clear();
       txtCodigo.clear();
-      nombre = null;
       codigo = null;
+      nombre = null;
     });
     
     //Registra la escuela o area academica
-    btnRegistrar.setOnAction((ActionEvent e) -> {        
-      lblError.setText("Error en los datos ingresados");
+    btnRegistrar.setOnAction((ActionEvent e) -> {
+      codigo = txtCodigo.getText();
+      nombre = txtNombre.getText();
+      if(codigo.length() == 2 && nombre != ""){
+        Escuela escuela = new Escuela(codigo,nombre);
+        EscuelaDao escuelaDao = new EscuelaDao();
+        escuelaDao.insertarNuevaEscuela(escuela);
+        btnLimpiar.fire();
+      }
+      else{
+        lblError.setText("Error en los datos ingresados");
+      }
     });
     
-    btnCerrar.setOnAction((ActionEvent e) -> {        
+    btnCerrar.setOnAction((ActionEvent e) -> {  
+      Stage stage = new Stage();
+      Inicio ventana = new Inicio();
+      ventana.start(stage);      
       primaryStage.close();
     });
     

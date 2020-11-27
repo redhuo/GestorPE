@@ -74,7 +74,7 @@ public class PlanDeEstudioDao {
   }
   
   public ArrayList<PlanDeEstudio> getPlanesDeEstudioPorEscuela(String codigoEscuela){
-    String sql = "select * from plan_de_estudio where codigo_escuela = ?";
+    String sql = "select * from plan_de_estudio where escuela = ?";
     PreparedStatement statement;
     String codigoCurso = "";
     ArrayList<PlanDeEstudio> planes = new ArrayList<>();
@@ -98,7 +98,7 @@ public class PlanDeEstudioDao {
   }
   
   public ObservableList<PlanDeEstudio> getPlanesDeEstudioPorCurso(String curso){
-    String sql = "select * from bloque where numero_plan = ?";
+    String sql = "select * from bloque where curso = ?";
     String sql2 = "select * from plan_de_estudio where numero = ?";
     PreparedStatement statement;
     ArrayList<Integer> numeros = new ArrayList<>();
@@ -109,7 +109,7 @@ public class PlanDeEstudioDao {
       statement.setString(1,curso);
       ResultSet resultado = statement.executeQuery();
       if (resultado.next()) {
-	numeros.add(resultado.getInt("numero_plan"));
+	numeros.add(resultado.getInt("plan"));
       }
       resultado.close();
       statement.close();

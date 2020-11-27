@@ -10,6 +10,7 @@ public class Curso {
   private String codigo;
   private String nombre;
   private String escuela;
+  private String bloque;
   private int creditos;
   private int horasLectivas;
   
@@ -19,6 +20,15 @@ public class Curso {
     this.creditos = pCreditos;
     this.horasLectivas = pHorasLectivas;
     this.escuela = pEscuela;
+  }
+  
+  public Curso(String pCodigo,String pNombre, int pCreditos, int pHorasLectivas, String pBloque, String pEscuela){
+    this.codigo = pCodigo;
+    this.nombre = pNombre;
+    this.creditos = pCreditos;
+    this.horasLectivas = pHorasLectivas;
+    this.escuela = pEscuela;
+    this.bloque = pBloque;
   }
 
   public String getCodigo() {
@@ -51,6 +61,14 @@ public class Curso {
 
   public void setHorasLectivas(int horasLectivas) {
     this.horasLectivas = horasLectivas;
+  }
+  
+  public String getBloque() {
+    return bloque;
+  }
+
+  public void setBloque(String bloque) {
+    this.bloque = bloque;
   }
   
   public String getEscuela() {

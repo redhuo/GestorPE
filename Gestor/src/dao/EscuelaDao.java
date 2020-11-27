@@ -46,14 +46,14 @@ public class EscuelaDao {
       }
   }
   
-  public Escuela getEscuela(Escuela nuevo){
+  public Escuela getEscuela(String codigo){
     String sql = "select * from escuela where codigo = ?";
     PreparedStatement statement;
     Escuela escuela = null;
     conexion = conexionSqlite.connect();
       try {
         statement = conexion.prepareStatement(sql);
-        statement.setString(1,nuevo.getCodigo());
+        statement.setString(1,codigo);
         ResultSet resultado = statement.executeQuery();
         if (resultado.next()) {
 	  escuela = new Escuela(resultado.getString("codigo"), resultado.getString("nombre"));
@@ -93,6 +93,6 @@ public class EscuelaDao {
     EscuelaDao escuela = new EscuelaDao();
     Escuela nuevo = new Escuela("IC","Escuela de Ingeniería en Computación");
     //escuela.insertarNuevaEscuela(nuevo);
-    System.out.println(escuela.getEscuela(nuevo).getNombre());
+    System.out.println(escuela.getEscuela("IC").getNombre());
   }
 }

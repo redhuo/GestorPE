@@ -5,6 +5,9 @@
 
 package aplicacion;
 
+import dao.CursoDao;
+import dao.EscuelaDao;
+import java.util.ArrayList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.geometry.Insets;
@@ -21,13 +24,16 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import modelo.Curso;
+import modelo.Escuela;
 
 public class RegistroCurso {
   String nombre;
   String codigo;
   String escuela;
   String creditos;
-  String horasLectivas;
+  String horas;
+  ArrayList<Escuela> escuelas;
     
   /**
    * Inicializa la ventana
@@ -108,22 +114,60 @@ public class RegistroCurso {
     lblError.setFont(Font.font("Arial", FontWeight.BOLD, 12));
     grid.add(lblError, 1, 7);
     
+    //Cargar datos
+    EscuelaDao escuelaDao = new EscuelaDao();
+    escuelas = escuelaDao.getEscuelas();
+    escuelas.forEach((e) -> {
+      bxEscuela.getItems().add(e.getNombre());
+    });
+    
+    /**
+     * Se activa al seleccionar una escuela de la lista desplagable
+     * imprime los dos primetos caracteres del codigo para el curso segun la 
+     * escuela en el label
+     */
+    bxEscuela.setOnAction((Event ev) -> {
+      escuela = bxEscuela.getSelectionModel().getSelectedItem().toString();
+      for(Escuela e : escuelas){
+        if(e.getNombre() == escuela){
+          escuela = e.getCodigo();
+        }
+      }
+      lblCodigoEscuela.setText(escuela);
+    });
+    
     //Registra el curso
     btnRegistrar.setOnAction((ActionEvent e) -> { 
+      codigo = escuela + txtCodigo.getText();
+      nombre = txtNombre.getText();
+      creditos = bxCreditos.getSelectionModel().getSelectedItem().toString();
+      horas = bxHoras.getSelectionModel().getSelectedItem().toString();
+      lblError.setText("");
+      if(codigo.length() == 6 && nombre != "" && creditos != "" && horas != ""){
+        Curso curso = new Curso(codigo, nombre, Integer.parseInt(creditos), Integer.parseInt(horas),escuela);
+        CursoDao cursoDao = new CursoDao();
+        cursoDao.insertarNuevoCurso(curso, escuela);
+        btnLimpiar.fire();
+      }
+      else{
+        lblError.setText("Error en los datos ingresados");
+      }
     });
     
     //Limpia los campos de texto
     btnLimpiar.setOnAction((ActionEvent e) -> { 
       txtNombre.clear();
       txtCodigo.clear();
+      lblCodigoEscuela.setText("");
+      lblError.setText("");
       nombre = null;
       codigo = null;
       escuela = null;
-      horasLectivas = null;
+      horas = null;
       creditos = null;
     });
     
-    btnCerrar.setOnAction((ActionEvent e) -> {        
+    btnCerrar.setOnAction((ActionEvent e) -> { 
       primaryStage.close();
     });
          
