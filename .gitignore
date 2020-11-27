@@ -2,3 +2,4 @@
 /Gestor/build/
 /Gestor/dist/
 /Gestor/test/
+Gestor/src/utils/SQLConnection.java
