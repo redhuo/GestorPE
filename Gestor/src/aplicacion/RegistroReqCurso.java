@@ -23,6 +23,8 @@ import javafx.scene.text.FontWeight;
 import modelo.Escuela;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import dao.CursoDao;
+import modelo.Curso;
 
 public class RegistroReqCurso {
   String escuela;
@@ -30,7 +32,9 @@ public class RegistroReqCurso {
   String requisito;
   String correquisito;
   ArrayList<Escuela> escuelas;
+  ArrayList<Curso> cursos;
   EscuelaDao escuelaDao;
+  CursoDao cursoDao;
   /**
    * Inicializa la ventana
    * @param primaryStage 
@@ -49,7 +53,7 @@ public class RegistroReqCurso {
     
     //Carga los recurso de un archivo css
     scene.getStylesheets().add(
-        RegistroEscuela.class.getResource("/css/General.css").toExternalForm());
+    RegistroEscuela.class.getResource("/css/General.css").toExternalForm());
     primaryStage.setScene(scene);
     
     Text titulo = new Text("Registro de requisitos y correquisitos de curso");
@@ -78,6 +82,11 @@ public class RegistroReqCurso {
     grid.add(lblCurso, 0, 2);
     ComboBox bxCurso = new ComboBox();
     grid.add(bxCurso, 1, 2);
+    cursoDao = new CursoDao();
+    cursos = cursoDao.getCursosPorEscuela(escuelaDao.getEscuelaPorNombre(escuela).getCodigo());
+    cursos.forEach((e) -> {
+      bxCurso.getItems().add(e.getNombre());
+    });
     //Se activa al seleccionar un curso de la lista desplagable 
     bxCurso.setOnAction((Event ev) -> {
       curso = bxEscuela.getSelectionModel().getSelectedItem().toString();    

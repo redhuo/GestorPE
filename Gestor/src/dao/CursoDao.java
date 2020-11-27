@@ -304,4 +304,9 @@ public class CursoDao {
     }
     return false;
   }
+  
+  public static void main(String[] args){
+    CursoDao dao = new CursoDao();
+    
+  }
 }
