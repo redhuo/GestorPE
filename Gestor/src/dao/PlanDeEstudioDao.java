@@ -138,13 +138,13 @@ public class PlanDeEstudioDao {
     return planes; 
   }
   
-  public boolean eliminarCursoDelPlan(String curso){
+  public boolean eliminarPlanCurso(int plan){
     boolean eliminado = false;
-    String sql = "DELETE FROM plandeestudio_curso WHERE codigo=?";
+    String sql = "DELETE FROM bloque WHERE plan = ?";
     PreparedStatement statement;
     try{
       statement = conexion.prepareStatement(sql);
-      statement.setString(1,curso);
+      statement.setString(1,plan);
       eliminado = statement.executeUpdate() > 0;
       statement.close(); 
     }

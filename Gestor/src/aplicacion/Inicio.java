@@ -42,9 +42,6 @@ import modelo.Escuela;
 import modelo.PlanDeEstudio;
 
 public class Inicio extends Application {
-  String curso;
-  String escuela;
-  int plan;
   ArrayList<Escuela> escuelas;
   ArrayList<PlanDeEstudio> planesDeEstudio;
   ArrayList<Curso> cursos;
@@ -53,9 +50,15 @@ public class Inicio extends Application {
   ObservableList<Curso> planCursos;
   ObservableList<PlanDeEstudio> cursoPlanes;
   ObservableList<Curso> cursoRequisitos;
+  Escuela escuela;
+  PlanDeEstudio plan;
+  Curso curso;
   EscuelaDao escuelaDao;
   PlanDeEstudioDao planDeEstudioDao;
   CursoDao cursoDao;
+  String escuelaCodigo;
+  String cursoCodigo;
+  int planNumero;
     
   @Override
   public void start(Stage primaryStage) {
@@ -160,9 +163,12 @@ public class Inicio extends Application {
     hbCurso.setAlignment(Pos.CENTER);
     hbCurso.getChildren().addAll(lblCodigoCurso, bxCurso);
     grid.add(hbCurso, 1, 4);
-    //Boton para eliminar un plan de estudio, requisito o correquisito del curso 
-    Button btnEliminar = new Button("Eliminar");
-    grid.add(btnEliminar, 3, 4);
+    //Boton para eliminar un plan de estudio del curso 
+    Button btnEliminarPlan = new Button("Eliminar Plan");
+    grid.add(btnEliminarPlan, 2, 4);
+    //Boton para eliminar un plan de estudio del curso 
+    Button btnEliminarRequisito = new Button("Eliminar Requisito");
+    grid.add(btnEliminarRequisito, 3, 4);
     
     //Tabla de planes de estudio que presentan el curso
     Text lblTablaPlanes = new Text("Planes de estudio que presentan el curso");
@@ -252,19 +258,19 @@ public class Inicio extends Application {
      * de planes de estudio y cursos
      */
     bxEscuela.setOnAction((Event ev) -> {
-      escuela = bxEscuela.getSelectionModel().getSelectedItem().toString();
-      for(Escuela e : escuelas){
-        if(e.getNombre() == escuela){
-          escuela = e.getCodigo();
+      escuelaCodigo = bxEscuela.getSelectionModel().getSelectedItem().toString();
+      for(Escuela escuela : escuelas){
+        if(escuela.getNombre() == escuelaCodigo){
+          escuelaCodigo = escuela.getCodigo();
         }
       }
-      planesDeEstudio = planDeEstudioDao.getPlanesDeEstudioPorEscuela(escuela);
-      planesDeEstudio.forEach((p) -> {
-          bxPlan.getItems().add(p.getNumero());
+      planesDeEstudio = planDeEstudioDao.getPlanesDeEstudioPorEscuela(escuelaCodigo);
+      planesDeEstudio.forEach((plan) -> {
+          bxPlan.getItems().add(plan.getNumero());
         });
-      cursos = cursoDao.getCursosPorEscuela(escuela);
-      cursos.forEach((c) -> {
-        bxCurso.getItems().add(c.getCodigo());
+      cursos = cursoDao.getCursosPorEscuela(escuelaCodigo);
+      cursos.forEach((curso) -> {
+        bxCurso.getItems().add(curso.getCodigo());
       });
     });
     
@@ -273,13 +279,13 @@ public class Inicio extends Application {
      * carga los datos en la tabla de cursos pertenecientes al plan
      */
     bxPlan.setOnAction((Event ev) -> {
-      plan = Integer.parseInt(bxPlan.getSelectionModel().getSelectedItem().toString());
+      planNumero = Integer.parseInt(bxPlan.getSelectionModel().getSelectedItem().toString());
       for(PlanDeEstudio p : planesDeEstudio){
-        if(p.getNumero() == plan){
+        if(p.getNumero() == planNumero){
           lblFecha.setText("Vigencia: " + p.getFecha());
         }
       }
-      planCursos = cursoDao.getCursosPorPlan(plan);
+      planCursos = cursoDao.getCursosPorPlan(planNumero);
       tablaCursos.setItems(planCursos);
     });
     
@@ -287,16 +293,16 @@ public class Inicio extends Application {
      * Se activa al seleccionar un curso de la lista desplagable 
      */
     bxCurso.setOnAction((Event ev) -> {
-      curso = bxCurso.getSelectionModel().getSelectedItem().toString();
-      cursoPlanes = planDeEstudioDao.getPlanesDeEstudioPorCurso(curso);
-      requisitos = cursoDao.getCursosRequisitos(curso);
-      correquisitos = cursoDao.getCursosCorrequisitos(curso);
+      cursoCodigo = bxCurso.getSelectionModel().getSelectedItem().toString();
+      cursoPlanes = planDeEstudioDao.getPlanesDeEstudioPorCurso(cursoCodigo);
+      requisitos = cursoDao.getCursosRequisitos(cursoCodigo);
+      correquisitos = cursoDao.getCursosCorrequisitos(cursoCodigo);
       cursoRequisitos = FXCollections.observableArrayList();
-      requisitos.forEach((c) -> {
-        cursoRequisitos.add(c);
+      requisitos.forEach((curso) -> {
+        cursoRequisitos.add(curso);
       });
-      correquisitos.forEach((c) -> {
-        cursoRequisitos.add(c);
+      correquisitos.forEach((curso) -> {
+        cursoRequisitos.add(curso);
       });
       tablaPlanes.setItems(cursoPlanes);
       tablaReqs.setItems(cursoRequisitos);
@@ -322,14 +328,34 @@ public class Inicio extends Application {
     });
     
     //Eliminar el curso seleccionado de la tabla de cursos
-    btnEliminarCurso.setOnAction((ActionEvent e) -> {        
+    btnEliminarCurso.setOnAction((ActionEvent e) -> { 
+      curso = (Curso) tablaCursos.getSelectionModel().getSelectedItem();
+      cursoCodigo = curso.getCodigo();
+      if(cursoDao.eliminarCursoPlan(cursoCodigo)){
+        planCursos.remove(curso);
+      }
     });
     
-    /**
-     * Eliminar plan de estudio, requisito o corresquisito de un curso dependiendo
-     * de cual fue la ultimo tabla selecionado y la relacion que tenga con el curso
-     */
-    btnEliminar.setOnAction((ActionEvent e) -> {        
+    //Eliminar plan de estudio de un curso dependiendo
+    btnEliminarPlan.setOnAction((ActionEvent e) -> {   
+      plan = (PlanDeEstudio) tablaPlanes.getSelectionModel().getSelectedItem();
+      planNumero = plan.getNumero();
+      if(planDeEstudioDao.eliminarPlanCurso(planNumero)){
+        cursoPlanes.remove(plan);
+      }
+    });
+    
+    //Eliminar requisito o corresquisito de un curso
+    btnEliminarRequisito.setOnAction((ActionEvent e) -> {    
+      String cursoReqCodigo;
+      curso = (Curso) tablaCursos.getSelectionModel().getSelectedItem();
+      cursoReqCodigo = curso.getCodigo();
+      if(cursoDao.eliminarRequisito(cursoReqCodigo, cursoCodigo)){
+        cursoRequisitos.remove(curso);
+      }
+      else if(cursoDao.eliminarCorrequisito(cursoReqCodigo, cursoCodigo)){
+        cursoRequisitos.remove(curso);
+      }
     });
     
     //Abre la ventana de registro de escuela o area academica

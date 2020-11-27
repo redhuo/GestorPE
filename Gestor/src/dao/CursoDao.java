@@ -239,13 +239,14 @@ public class CursoDao {
     return cursos; 
   }
   
-  public boolean eliminarRequisito(String curso){
+  public boolean eliminarRequisito(String requisito, String curso){
     boolean eliminado = false;
-    String sql = "DELETE FROM curso_requisito WHERE curso=?";
+    String sql = "DELETE FROM curso_requisito WHERE curso = ? and requisito = ?";
     PreparedStatement statement;
     try{
       statement = conexion.prepareStatement(sql);
       statement.setString(1,curso);
+      statement.setString(2,requisito);
       eliminado = statement.executeUpdate() > 0;
       statement.close(); 
     }
@@ -255,14 +256,20 @@ public class CursoDao {
     return eliminado;
   }
   
-  public boolean eliminarCorrequisito(String curso){
+  public boolean eliminarCorrequisito(String correquisito, String curso){
     boolean eliminado = false;
-    String sql = "DELETE FROM curso_correquisito WHERE curso=?";
+    String sql = "DELETE FROM curso_correquisito WHERE curso = ? and correquisito = ?";
     PreparedStatement statement;
     try{
       statement = conexion.prepareStatement(sql);
       statement.setString(1,curso);
+      statement.setString(2,correquisito);
       eliminado = statement.executeUpdate() > 0;
+      if(!eliminado){
+        statement.setString(1,correquisito);
+        statement.setString(2,curso);
+        eliminado = statement.executeUpdate() > 0;
+      }
       statement.close(); 
     }
     catch(SQLException ex){
@@ -282,7 +289,7 @@ public class CursoDao {
       ResultSet resultado = statement.executeQuery();
       if (resultado.next()) {
         if(resultado.getInt("total")>0){
-          System.out.println("Curso se encuenra en un plan de estudio");
+          System.out.println("Curso se encuentra en un plan de estudio");
           return false;
         }
       }
@@ -303,5 +310,21 @@ public class CursoDao {
       Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
     }
     return false;
+  }
+  
+  public boolean eliminarCursoPlan(String curso){
+    boolean eliminado = false;
+    String sql = "DELETE FROM bloque WHERE curso = ?";
+    PreparedStatement statement;
+    try{
+      statement = conexion.prepareStatement(sql);
+      statement.setString(1,curso);
+      eliminado = statement.executeUpdate() > 0;
+      statement.close(); 
+    }
+    catch(SQLException ex){
+      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return eliminado;
   }
 }
