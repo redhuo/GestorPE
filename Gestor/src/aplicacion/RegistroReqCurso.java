@@ -5,6 +5,8 @@
 
 package aplicacion;
 
+import dao.EscuelaDao;
+import java.util.ArrayList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.geometry.Insets;
@@ -18,6 +20,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import modelo.Escuela;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -26,7 +29,8 @@ public class RegistroReqCurso {
   String curso;
   String requisito;
   String correquisito;
-  
+  ArrayList<Escuela> escuelas;
+  EscuelaDao escuelaDao;
   /**
    * Inicializa la ventana
    * @param primaryStage 
@@ -59,6 +63,11 @@ public class RegistroReqCurso {
     //Lista desplegable de escuelas o areas academicas
     ComboBox bxEscuela = new ComboBox();
     grid.add(bxEscuela, 1, 1);    
+    escuelaDao = new EscuelaDao();
+    escuelas = escuelaDao.getEscuelas();
+    escuelas.forEach((e) -> {
+      bxEscuela.getItems().add(e.getNombre());
+    });
     //Se activa al seleccionar una escuela de la lista desplagable
     bxEscuela.setOnAction((Event ev) -> {
       escuela = bxEscuela.getSelectionModel().getSelectedItem().toString();    

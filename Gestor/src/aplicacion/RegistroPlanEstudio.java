@@ -5,6 +5,7 @@
 
 package aplicacion;
 
+import java.util.ArrayList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.geometry.Insets;
@@ -21,6 +22,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import modelo.Escuela;
+import dao.EscuelaDao;
 
 public class RegistroPlanEstudio {
   String escuela;
@@ -28,7 +31,8 @@ public class RegistroPlanEstudio {
   String fecha;
   String curso;
   String bloque;
-    
+  ArrayList<Escuela> escuelas;
+  EscuelaDao escuelaDao;
   /**
    * Inicializa la ventana
    * @param primaryStage 
@@ -46,7 +50,7 @@ public class RegistroPlanEstudio {
     
     //Carga los recurso de un archivo css
     scene.getStylesheets().add(
-        RegistroEscuela.class.getResource("/css/General.css").toExternalForm());
+    RegistroEscuela.class.getResource("/css/General.css").toExternalForm());
     primaryStage.setScene(scene);
     
     Text titulo = new Text("Registro de Plan de Estudio");
@@ -60,6 +64,11 @@ public class RegistroPlanEstudio {
     //Lista desplegable de escuelas o areas academicas
     ComboBox bxEscuela = new ComboBox();
     grid.add(bxEscuela, 1, 1);    
+    escuelaDao = new EscuelaDao();
+    escuelas = escuelaDao.getEscuelas();
+    escuelas.forEach((e) -> {
+      bxEscuela.getItems().add(e.getNombre());
+    });
     //Se activa al seleccionar una escuela de la lista desplagable
     bxEscuela.setOnAction((Event ev) -> {
       escuela = bxEscuela.getSelectionModel().getSelectedItem().toString();    
