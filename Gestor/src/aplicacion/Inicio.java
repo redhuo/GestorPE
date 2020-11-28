@@ -12,6 +12,7 @@ import dao.PlanDeEstudioDao;
 import java.util.ArrayList;
 import java.util.Optional;
 import javafx.application.Application;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -103,23 +104,24 @@ public class Inicio extends Application {
     lblTablaCursos.setFill(Color.WHITE);
     lblTablaCursos.setFont(Font.font("Arial", FontWeight.BOLD, 14));
     grid.add(lblTablaCursos, 0, 2);
-    TableView tablaCursos = new TableView();
+    TableView<Curso> tablaCursos = new TableView();
+   // Curso.codigoProperty();
     //Columnas de la tabla de cursos
-    TableColumn colCodigo = new TableColumn("Codigo");
+    TableColumn<Curso,StringProperty> colCodigo = new TableColumn("Codigo");
     colCodigo.setMinWidth(50);
-    colCodigo.setCellValueFactory( new PropertyValueFactory<>("codigo"));
-    TableColumn colNombre = new TableColumn("Nombre");
+    colCodigo.setCellValueFactory( new PropertyValueFactory<Curso,StringProperty>("codigo"));
+    TableColumn<Curso,String> colNombre = new TableColumn("Nombre");
     colNombre.setMinWidth(270);
     colNombre.setCellValueFactory( new PropertyValueFactory<>("nombre"));
     TableColumn colBloque = new TableColumn("Bloque");
     colBloque.setMinWidth(100);
-    colBloque.setCellValueFactory( new PropertyValueFactory<>("bloque"));
+    colBloque.setCellValueFactory( new PropertyValueFactory<Curso,String>("bloque"));
     TableColumn colHoras = new TableColumn("Horas");
     colHoras.setMinWidth(50);
-    colHoras.setCellValueFactory( new PropertyValueFactory<>("horas"));
+    colHoras.setCellValueFactory( new PropertyValueFactory<Curso,Integer>("horasLectivas"));
     TableColumn colCreditos = new TableColumn("Creditos");
     colCreditos.setMinWidth(50);
-    colCreditos.setCellValueFactory( new PropertyValueFactory<>("creditos"));
+    colCreditos.setCellValueFactory( new PropertyValueFactory<Curso,Integer>("creditos"));
     //Agrega las columnas creadas a la tabla de cursos
     tablaCursos.getColumns().addAll(colCodigo, colNombre, 
         colBloque, colHoras, colCreditos);
@@ -256,13 +258,17 @@ public class Inicio extends Application {
       for(Escuela e : escuelas){
         if(e.getNombre() == escuela){
           escuela = e.getCodigo();
+          System.out.println("la escuela es "+escuela);
         }
       }
       planesDeEstudio = planDeEstudioDao.getPlanesDeEstudioPorEscuela(escuela);
+      bxPlan.getItems().clear();
       planesDeEstudio.forEach((p) -> {
+          System.out.println("el p es "+ p.getNumero());
           bxPlan.getItems().add(p.getNumero());
         });
       cursos = cursoDao.getCursosPorEscuela(escuela);
+      bxCurso.getItems().clear();
       cursos.forEach((c) -> {
         bxCurso.getItems().add(c.getCodigo());
       });
@@ -280,7 +286,15 @@ public class Inicio extends Application {
         }
       }
       planCursos = cursoDao.getCursosPorPlan(plan);
+      System.out.println("hola aqui esta "+ planCursos.get(0).getCodigo()+planCursos.get(0).getNombre());
       tablaCursos.setItems(planCursos);
+      System.out.println("hola aqui esta 2 "+ tablaCursos.getItems().get(0).getCodigo());
+      tablaCursos.getColumns().clear();
+      tablaCursos.getColumns().addAll(colCodigo, colNombre, 
+        colBloque, colHoras, colCreditos);
+      System.out.println("no sirve " + colNombre.getCellData(0));
+     // tablaCursos.
+      
     });
     
     /**

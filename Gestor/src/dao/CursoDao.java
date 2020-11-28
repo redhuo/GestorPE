@@ -106,7 +106,7 @@ public class CursoDao {
   }
   
   public ObservableList<Curso> getCursosPorPlan(int plan){
-    String sql = "select * from bloque where numero_plan = ?";
+    String sql = "select * from bloque where plan = ?";
     String sql2 = "select * from curso where codigo = ?";
     PreparedStatement statement;
     ArrayList<String[]> codigos = new ArrayList<>();

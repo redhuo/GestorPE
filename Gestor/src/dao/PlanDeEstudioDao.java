@@ -69,15 +69,17 @@ public class PlanDeEstudioDao {
     PreparedStatement statement;
     String codigoCurso = "";
     ArrayList<PlanDeEstudio> planes = new ArrayList<>();
+    System.out.println("Aqui 1 "+ codigoEscuela);
     conexion = conexionSqlite.connect();
     try {
       statement = conexion.prepareStatement(sql);
-      statement.setString(1,codigoCurso);
+      statement.setString(1,codigoEscuela);
       ResultSet resultado = statement.executeQuery();
+      System.out.println("Aqui 2 " + resultado.getString("fechaVigencia"));
       if (resultado.next()) {
-	PlanDeEstudio nuevo = new PlanDeEstudio(resultado.getInt(0), resultado.getString(1), resultado.getString(2));
+	PlanDeEstudio nuevo = new PlanDeEstudio(resultado.getInt("numero"), resultado.getString("fechaVigencia"), resultado.getString("escuela"));
         planes.add(nuevo);
-        System.out.println(nuevo.getNumero());
+        System.out.println("Aqui "+nuevo.getNumero());
       }
       resultado.close();
       statement.close();
