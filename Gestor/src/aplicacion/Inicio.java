@@ -11,6 +11,8 @@ import dao.EscuelaDao;
 import dao.PlanDeEstudioDao;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -38,9 +40,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javax.mail.MessagingException;
 import modelo.Curso;
 import modelo.Escuela;
 import modelo.PlanDeEstudio;
+import utils.Email;
+import utils.PDF;
 
 public class Inicio extends Application {
   String curso;
@@ -280,6 +285,7 @@ public class Inicio extends Application {
      */
     bxPlan.setOnAction((Event ev) -> {
       plan = Integer.parseInt(bxPlan.getSelectionModel().getSelectedItem().toString());
+      System.out.println("el plan es "+plan);
       for(PlanDeEstudio p : planesDeEstudio){
         if(p.getNumero() == plan){
           lblFecha.setText("Vigencia: " + p.getFecha());
@@ -321,6 +327,7 @@ public class Inicio extends Application {
      * enviara le PDF generado
      */
     btnGenerarPdf.setOnAction((ActionEvent e) -> {
+     // new PDF(Integer.toString(plan)).crearPDF("joss", planCursos);
       TextInputDialog dialog = new TextInputDialog("walter");
       dialog.setTitle("Enviar plan de estudio");
       dialog.setHeaderText("Enviar PDF del plan de estudio");
@@ -329,9 +336,17 @@ public class Inicio extends Application {
       // Traditional way to get the response value.
       if (result.isPresent()){
         System.out.println("Your name: " + result.get());
+        new PDF(Integer.toString(plan)).crearPDF("plandeestudio", planCursos);
+          try {
+              new Email(result.get(),"plandeestudio.pdf",Integer.toString(plan)).enviar();
+          } catch (MessagingException ex) {
+              Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+          }
+        
       }
       // The Java 8 way to get the response value (with lambda expression). 
       result.ifPresent(name -> System.out.println("Your name: " + name));
+      
         
     });
     

@@ -26,11 +26,11 @@ import java.util.Properties;
 public class Email {
   String correo;
   String archivo;
-  String numeroPedido;
-  public Email(String correo,String archivo, String numeroPedido)  {
+  String numeroPlan;
+  public Email(String correo,String archivo, String numeroPlan)  {
     this.correo = correo;
     this.archivo = archivo;
-    this.numeroPedido = numeroPedido;
+    this.numeroPlan = numeroPlan;
   }
     
   public void enviar() throws MessagingException {
@@ -50,7 +50,7 @@ public class Email {
     message.setRecipients(Message.RecipientType.TO, toAddress);
     message.setSubject("Envio de plan de estudio");
     BodyPart messageBodyPart = new MimeBodyPart();
-    messageBodyPart.setText("Plan de Estudio");
+    messageBodyPart.setText("Plan de Estudio numero: "+ this.numeroPlan);
     Multipart multipart = new MimeMultipart();
     multipart.addBodyPart(messageBodyPart);
     messageBodyPart = new MimeBodyPart();
