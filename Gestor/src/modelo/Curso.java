@@ -5,82 +5,77 @@
 
 package modelo;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
 public class Curso {
   
-  private final StringProperty codigo;
-  private final StringProperty nombre;
-  private final StringProperty escuela;
-  private final StringProperty bloque = new SimpleStringProperty("");;
-  private final IntegerProperty creditos;
-  private final IntegerProperty horasLectivas;
+  private String codigo;
+  private String nombre;
+  private String escuela;
+  private String bloque;
+  private int creditos;
+  private int horasLectivas;
   
   public Curso(String pCodigo,String pNombre, int pCreditos, int pHorasLectivas, String pEscuela){
-    this.codigo = new SimpleStringProperty(pCodigo);
-    this.nombre =  new SimpleStringProperty(pNombre);
-    this.creditos = new SimpleIntegerProperty(pCreditos);
-    this.horasLectivas = new SimpleIntegerProperty(pHorasLectivas);
-    this.escuela =  new SimpleStringProperty(pEscuela);
+    this.codigo = pCodigo;
+    this.nombre = pNombre;
+    this.creditos = pCreditos;
+    this.horasLectivas = pHorasLectivas;
+    this.escuela = pEscuela;
   }
   
   public Curso(String pCodigo,String pNombre, int pCreditos, int pHorasLectivas, String pBloque, String pEscuela){
-    this.codigo = new SimpleStringProperty(pCodigo);
-    this.nombre = new SimpleStringProperty(pNombre);
-    this.creditos = new SimpleIntegerProperty(pCreditos);
-    this.horasLectivas = new SimpleIntegerProperty(pHorasLectivas);
-    this.escuela = new SimpleStringProperty(pEscuela);
-    this.bloque.set(pBloque);
+    this.codigo = pCodigo;
+    this.nombre = pNombre;
+    this.creditos = pCreditos;
+    this.horasLectivas = pHorasLectivas;
+    this.escuela = pEscuela;
+    this.bloque = pBloque;
   }
 
   public String getCodigo() {
-    return codigo.get();
+    return codigo;
   }
 
   public void setCodigo(String codigo) {
-    this.codigo.set(codigo);
+    this.codigo = codigo;
   }
 
   public String getNombre() {
-    return nombre.get();
+    return nombre;
   }
 
   public void setNombre(String nombre) {
-    this.nombre.set(nombre);
+    this.nombre = nombre;
   }
 
   public int getCreditos() {
-    return creditos.get();
+    return creditos;
   }
 
   public void setCreditos(int creditos) {
-    this.creditos.set(creditos);
+    this.creditos = creditos;
   }
 
   public int getHorasLectivas() {
-    return horasLectivas.get();
+    return horasLectivas;
   }
 
   public void setHorasLectivas(int horasLectivas) {
-    this.horasLectivas.set(horasLectivas);
+    this.horasLectivas = horasLectivas;
   }
   
   public String getBloque() {
-    return bloque.get();
+    return bloque;
   }
 
   public void setBloque(String bloque) {
-    this.bloque.set(bloque);
+    this.bloque = bloque;
   }
   
   public String getEscuela() {
-    return escuela.get();
+    return escuela;
   }
 
   public void setEscuela(String escuela) {
-    this.escuela.set(escuela);
+    this.escuela = escuela;
   }
 }

@@ -30,15 +30,25 @@ public class PlanDeEstudioDao {
   public PlanDeEstudioDao(){
     conexionSqlite = new SQLConnection();
   }
-  public void insertarNuevoPlan(PlanDeEstudio nuevo){
-    String sql = "insert into plan_de_estudio(numero,fechaVigencia,escuela) values(?,?,?)";
+  public void insertarNuevoPlan(PlanDeEstudio nuevo,String escuela){
+    String sql = "insert into plan_de_estudio(numero,fechaVigencia) values(?,?)";
+    String sql2 = "insert into escuela_plandeestudio(numero_plan,codigo_escuela) values(?,?)";
     PreparedStatement statement;
     conexion = conexionSqlite.connect();
     try {
       statement = conexion.prepareStatement(sql);
       statement.setInt(1,nuevo.getNumero());
       statement.setString(2,nuevo.getFecha());
-      statement.setString(3,nuevo.getEscuela());
+      statement.executeUpdate();
+      statement.close();
+    } 
+    catch (SQLException ex) {
+      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    try {
+      statement = conexion.prepareStatement(sql2);
+      statement.setInt(1,nuevo.getNumero());
+      statement.setString(2,escuela);
       statement.executeUpdate();
       statement.close();
     } 
@@ -47,15 +57,14 @@ public class PlanDeEstudioDao {
     }
   }
   
-  public void insertarCurso(int plan, String curso,int bloque){
-    String sql = "insert into bloque(plan,curso,numero) values(?,?,?)";
+  public void insertarCurso(int plan, String curso){
+    String sql = "insert into plandeestudio_curso(plan,curso) values(?,?)";
     PreparedStatement statement;
     conexion = conexionSqlite.connect();
     try {
       statement = conexion.prepareStatement(sql);
       statement.setInt(1,plan);
       statement.setString(2,curso);
-      statement.setInt(3,bloque);
       statement.executeUpdate();
       statement.close();
     } 
@@ -69,17 +78,15 @@ public class PlanDeEstudioDao {
     PreparedStatement statement;
     String codigoCurso = "";
     ArrayList<PlanDeEstudio> planes = new ArrayList<>();
-    System.out.println("Aqui 1 "+ codigoEscuela);
     conexion = conexionSqlite.connect();
     try {
       statement = conexion.prepareStatement(sql);
-      statement.setString(1,codigoEscuela);
+      statement.setString(1,codigoCurso);
       ResultSet resultado = statement.executeQuery();
-      System.out.println("Aqui 2 " + resultado.getString("fechaVigencia"));
       if (resultado.next()) {
-	PlanDeEstudio nuevo = new PlanDeEstudio(resultado.getInt("numero"), resultado.getString("fechaVigencia"), resultado.getString("escuela"));
+	PlanDeEstudio nuevo = new PlanDeEstudio(resultado.getInt(0), resultado.getString(1), resultado.getString(2));
         planes.add(nuevo);
-        System.out.println("Aqui "+nuevo.getNumero());
+        System.out.println(nuevo.getNumero());
       }
       resultado.close();
       statement.close();

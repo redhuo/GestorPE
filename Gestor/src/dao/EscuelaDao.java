@@ -46,46 +46,25 @@ public class EscuelaDao {
       }
   }
   
-  public Escuela getEscuelaPorCodigo(String codigo){
+  public Escuela getEscuela(String codigo){
     String sql = "select * from escuela where codigo = ?";
     PreparedStatement statement;
     Escuela escuela = null;
     conexion = conexionSqlite.connect();
-    try {
-      statement = conexion.prepareStatement(sql);
-      statement.setString(1,codigo);
-      ResultSet resultado = statement.executeQuery();
-      if (resultado.next()) {
-      escuela = new Escuela(resultado.getString("codigo"), resultado.getString("nombre"));
+      try {
+        statement = conexion.prepareStatement(sql);
+        statement.setString(1,codigo);
+        ResultSet resultado = statement.executeQuery();
+        if (resultado.next()) {
+	  escuela = new Escuela(resultado.getString("codigo"), resultado.getString("nombre"));
+        }
+        resultado.close();
+        statement.close();
+      } 
+      catch (SQLException ex) {
+        Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
       }
-      resultado.close();
-      statement.close();
-    } 
-    catch (SQLException ex) {
-      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    return escuela;
-  }
-  
-  public Escuela getEscuelaPorNombre(String nombre){
-    String sql = "select * from escuela where nombre = ?";
-    PreparedStatement statement;
-    Escuela escuela = null;
-    conexion = conexionSqlite.connect();
-    try {
-      statement = conexion.prepareStatement(sql);
-      statement.setString(1,nombre);
-      ResultSet resultado = statement.executeQuery();
-      if (resultado.next()) {
-	escuela = new Escuela(resultado.getString("codigo"), resultado.getString("nombre"));
-      }
-      resultado.close();
-      statement.close();
-    } 
-    catch (SQLException ex) {
-      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    return escuela;
+      return escuela;
   }
   
   public ArrayList<Escuela> getEscuelas(){
@@ -114,6 +93,6 @@ public class EscuelaDao {
     EscuelaDao escuela = new EscuelaDao();
     Escuela nuevo = new Escuela("IC","Escuela de Ingeniería en Computación");
     //escuela.insertarNuevaEscuela(nuevo);
-    System.out.println(escuela.getEscuelaPorCodigo("IC").getNombre());
+    System.out.println(escuela.getEscuela("IC").getNombre());
   }
 }
