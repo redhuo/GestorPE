@@ -183,7 +183,7 @@ public class CursoDao {
       statement.setString(1,curso);
       ResultSet resultado = statement.executeQuery();
       while(resultado.next()) {
-	codigos.add(resultado.getString("requisito"));
+	codigos.add(resultado.getString("requisitos"));
       }
       resultado.close();
       statement.close();
@@ -247,7 +247,7 @@ public class CursoDao {
         resultado = statement.executeQuery();
         if (resultado.next()) {
           Curso nuevo = new Curso(resultado.getString("codigo"), resultado.getString("nombre"), 
-              resultado.getInt("creditos"), resultado.getInt("hora_lectivas"), resultado.getString("escuela"));
+              resultado.getInt("creditos"), resultado.getInt("horas_lectivas"), resultado.getString("escuela"));
           cursos.add(nuevo);
           System.out.println(nuevo.getNombre());
         }
@@ -263,7 +263,7 @@ public class CursoDao {
   
   public boolean eliminarRequisito(String requisito, String curso){
     boolean eliminado = false;
-    String sql = "DELETE FROM curso_requisito WHERE curso = ? and requisito = ?";
+    String sql = "DELETE FROM curso_requisito WHERE curso = ? and requisitos = ?";
     PreparedStatement statement;
     try{
       statement = conexion.prepareStatement(sql);
@@ -271,6 +271,7 @@ public class CursoDao {
       statement.setString(2,requisito);
       eliminado = statement.executeUpdate() > 0;
       statement.close(); 
+      eliminado = true;
     }
     catch(SQLException ex){
       Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -293,6 +294,7 @@ public class CursoDao {
         eliminado = statement.executeUpdate() > 0;
       }
       statement.close(); 
+      eliminado = true;
     }
     catch(SQLException ex){
       Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);

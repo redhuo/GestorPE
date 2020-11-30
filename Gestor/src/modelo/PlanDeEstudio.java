@@ -5,40 +5,45 @@
 
 package modelo;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public class PlanDeEstudio {
   
-  private int numero;
-  private String fechaVigencia;
-  private String escuela;
+  private final IntegerProperty numero;
+  private final StringProperty fechaVigencia;
+  private final StringProperty escuela;
   
   public PlanDeEstudio(int pNumero, String pFecha, String pEscuela){
-    this.numero = pNumero;
-    this.fechaVigencia = pFecha;
-    this.escuela = pEscuela;
+    this.numero = new SimpleIntegerProperty(pNumero);
+    this.fechaVigencia = new SimpleStringProperty(pFecha);
+    this.escuela = new SimpleStringProperty(pEscuela);
   }
 
   public int getNumero() {
-    return numero;
+    return numero.get();
   }
 
   public void setNumero(int numero) {
-    this.numero = numero;
+    this.numero.set(numero);
   }
 
-  public String getFecha() {
-    return fechaVigencia;
+  public String getFechaVigencia() {
+    return fechaVigencia.get();
   }
 
-  public void setFecha(String fecha) {
-    this.fechaVigencia = fecha;
+  public void setFechaVigencia(String fecha) {
+    this.fechaVigencia.set(fecha);
   }
 
   public String getEscuela() {
-    return escuela;
+    return escuela.get();
   }
 
   public void setEscuela(String escuela) {
-    this.escuela = escuela;
+    this.escuela.set(escuela);
   }
   
 }

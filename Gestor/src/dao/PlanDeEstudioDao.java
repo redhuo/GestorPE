@@ -35,7 +35,7 @@ public class PlanDeEstudioDao {
     try {
       statement = conexion.prepareStatement(sql);
       statement.setInt(1,nuevo.getNumero());
-      statement.setString(2,nuevo.getFecha());
+      statement.setString(2,nuevo.getFechaVigencia());
       statement.setString(3,nuevo.getEscuela());
       statement.executeUpdate();
       statement.close();
@@ -72,7 +72,7 @@ public class PlanDeEstudioDao {
       statement = conexion.prepareStatement(sql);
       statement.setString(1,codigoEscuela);
       ResultSet resultado = statement.executeQuery();
-      if (resultado.next()) {
+      while (resultado.next()) {
 	PlanDeEstudio nuevo = new PlanDeEstudio(resultado.getInt("numero"), 
             resultado.getString("fechaVigencia"), resultado.getString("escuela"));
         planes.add(nuevo);
@@ -98,8 +98,8 @@ public class PlanDeEstudioDao {
       statement.setString(1,curso);
       ResultSet resultado = statement.executeQuery();
       while (resultado.next()) {
-	numeros.add(resultado.getInt(1));
-        System.out.println("busca plan "+resultado.getInt(1));
+	numeros.add(resultado.getInt("plan"));
+        System.out.println("busca plan "+resultado.getInt("plan"));
       }
       resultado.close();
       statement.close();
@@ -108,19 +108,22 @@ public class PlanDeEstudioDao {
       Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
     }
     try {
-      statement = conexion.prepareStatement(sql2);
-      ResultSet resultado = null;
       for(int numero : numeros){
+        statement = conexion.prepareStatement(sql2);
+        ResultSet resultado = null;
+        System.out.println("es numero es "+numero);
         statement.setInt(1,numero);
         resultado = statement.executeQuery();
-        if (resultado.next()) {
-          PlanDeEstudio nuevo = new PlanDeEstudio(resultado.getInt(0), resultado.getString(1), resultado.getString(2));
+        while (resultado.next()) {
+          System.out.println("esto es b "+ resultado.getString("fechaVigencia")+ " ---");
+          PlanDeEstudio nuevo = new PlanDeEstudio(resultado.getInt("numero"), resultado.getString("fechaVigencia"), resultado.getString("escuela"));
           planes.add(nuevo);
           System.out.println(nuevo.getNumero());
         }
+        resultado.close();
+        statement.close();
       }      
-      resultado.close();
-      statement.close();
+      
     } 
     catch (SQLException ex) {
       Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);

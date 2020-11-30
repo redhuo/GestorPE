@@ -178,20 +178,20 @@ public class Inicio extends Application {
     Text lblTablaPlanes = new Text("Planes de estudio que presentan el curso");
     lblTablaPlanes.setFill(Color.WHITE);
     lblTablaPlanes.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-    TableView tablaPlanes = new TableView();
+    TableView<PlanDeEstudio> tablaPlanes = new TableView();
     //Columnas de la tabla de planes de estudio
     TableColumn colNumero = new TableColumn("Numero");
     colNumero.setMinWidth(50);
-    colNumero.setCellValueFactory( new PropertyValueFactory<>("numero"));
+    colNumero.setCellValueFactory( new PropertyValueFactory<PlanDeEstudio,Integer>("numero"));
     TableColumn colEscuela = new TableColumn("Escuela");
     colEscuela.setMinWidth(50);
-    colEscuela.setCellValueFactory( new PropertyValueFactory<>("escuela"));
+    colEscuela.setCellValueFactory( new PropertyValueFactory<PlanDeEstudio,String>("escuela"));
     TableColumn colVigencia = new TableColumn("Vigencia");
     colVigencia.setMinWidth(100);
-    colVigencia.setCellValueFactory( new PropertyValueFactory<>("fechaVigencia"));
-    colBloque.setCellValueFactory( new PropertyValueFactory<>("bloque"));
+    colVigencia.setCellValueFactory( new PropertyValueFactory<PlanDeEstudio,String>("fechaVigencia"));
+    //colBloque.setCellValueFactory( new PropertyValueFactory<>("bloque"));
     //Agrega las columnas creadas a la tabla de planes de estudio
-    tablaPlanes.getColumns().addAll(colNumero, colEscuela, colVigencia, colBloque);
+    tablaPlanes.getColumns().addAll(colNumero, colEscuela, colVigencia);
     //Panel con barra de desplazamiento en la que se situa la tabla de planes de estudio
     ScrollPane spTablaPlanes = new ScrollPane();
     spTablaPlanes.setHbarPolicy(ScrollBarPolicy.NEVER);
@@ -209,12 +209,12 @@ public class Inicio extends Application {
     Text lblTablaReqs = new Text("Requisitos y correquisitos del curso");
     lblTablaReqs.setFill(Color.WHITE);
     lblTablaReqs.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-    TableView tablaReqs = new TableView();
+    TableView<Curso> tablaReqs = new TableView();
     TableColumn colNombreR = new TableColumn("Nombre");
     colNombreR.setMinWidth(170);
     colNombreR.setCellValueFactory( new PropertyValueFactory<>("nombre"));
     //Agrega las columnas creadas a la tabla de requisitos y correquisitos
-    tablaReqs.getColumns().addAll(colCodigo, colNombreR, colEscuela, colHoras, colCreditos);
+    tablaReqs.getColumns().addAll(colCodigo, colNombreR, colHoras, colCreditos);
     //Panel con barra de desplazamiento en la que se situa la tabla de requisitos y correquisitos
     ScrollPane spTablaReqs = new ScrollPane();
     spTablaReqs.setHbarPolicy(ScrollBarPolicy.NEVER);
@@ -285,10 +285,12 @@ public class Inicio extends Application {
      * carga los datos en la tabla de cursos pertenecientes al plan
      */
     bxPlan.setOnAction((Event ev) -> {
+      tablaCursos.getColumns().clear();
+    
       plan = Integer.parseInt(bxPlan.getSelectionModel().getSelectedItem().toString());
       for(PlanDeEstudio p : planesDeEstudio){
         if(p.getNumero() == plan){
-          lblFecha.setText("Vigencia: " + p.getFecha());
+          lblFecha.setText("Vigencia: " + p.getFechaVigencia());
         }
       }
       planCursos = cursoDao.getCursosPorPlan(plan);
@@ -302,6 +304,7 @@ public class Inicio extends Application {
      * Se activa al seleccionar un curso de la lista desplagable 
      */
     bxCurso.setOnAction((Event ev) -> {
+      tablaPlanes.getColumns().clear();
       curso = bxCurso.getSelectionModel().getSelectedItem().toString();
       cursoPlanes = planDeEstudioDao.getPlanesDeEstudioPorCurso(curso);
       requisitos = cursoDao.getCursosRequisitos(curso);
@@ -314,11 +317,12 @@ public class Inicio extends Application {
         cursoRequisitos.add(curso);
       });
       tablaPlanes.setItems(cursoPlanes);
+      System.out.println("el tamano es "+cursoPlanes.size());
       tablaPlanes.getColumns().clear();
-      tablaPlanes.getColumns().addAll(colNumero, colEscuela, colVigencia, colBloque);
+      tablaPlanes.getColumns().addAll(colNumero, colEscuela, colVigencia);
       tablaReqs.setItems(cursoRequisitos);
       tablaReqs.getColumns().clear();
-      tablaReqs.getColumns().addAll(colCodigo, colNombreR, colEscuela, colHoras, colCreditos);
+      tablaReqs.getColumns().addAll(colCodigo, colNombreR, colHoras, colCreditos);
     });
     
     //Eliminar el curso seleccionado de la tabla de cursos
@@ -349,9 +353,11 @@ public class Inicio extends Application {
     //Eliminar requisito o corresquisito de un curso
     btnEliminarRequisito.setOnAction((ActionEvent e) -> { 
       int indice = tablaReqs.getSelectionModel().getSelectedIndex();
+      
       if(indice>-1){
         String cursoReqCodigo;
-        cursoSelect = (Curso) tablaCursos.getSelectionModel().getSelectedItem();
+        System.out.println("el error esta aqui "+ tablaReqs.getSelectionModel().getSelectedItem().getCodigo());
+        cursoSelect = tablaReqs.getSelectionModel().getSelectedItem();
         cursoReqCodigo = cursoSelect.getCodigo();
         if(cursoDao.eliminarRequisito(cursoReqCodigo, curso)||
             cursoDao.eliminarCorrequisito(cursoReqCodigo, curso)){
@@ -386,31 +392,31 @@ public class Inicio extends Application {
     
     //Abre la ventana de registro de escuela o area academica
     btnEscuela.setOnAction((ActionEvent e) -> {
-        Stage stage = new Stage();
-        RegistroEscuela ventana = new RegistroEscuela();
-        ventana.start(stage);
-        primaryStage.close();
+      Stage stage = new Stage();
+      RegistroEscuela ventana = new RegistroEscuela();
+      ventana.start(stage);
+      primaryStage.close();
     });
     
     //Abre la ventana de registro de curso
     btnCurso.setOnAction((ActionEvent e) -> {
-        Stage stage = new Stage();
-        RegistroCurso ventana = new RegistroCurso();
-        ventana.start(stage);
+      Stage stage = new Stage();
+      RegistroCurso ventana = new RegistroCurso();
+      ventana.start(stage);
     });
     
     //Abre la ventana de registro de plan de estudio
     btnPlan.setOnAction((ActionEvent e) -> {
-        Stage stage = new Stage();
-        RegistroPlanEstudio ventana = new RegistroPlanEstudio();
-        ventana.start(stage);
+      Stage stage = new Stage();
+      RegistroPlanEstudio ventana = new RegistroPlanEstudio();
+      ventana.start(stage);
     });
     
     //Abre la ventana de registro de requisitos y correquisitos de un curso
     btnCursoReq.setOnAction((ActionEvent e) -> {
-        Stage stage = new Stage();
-        RegistroReqCurso ventana = new RegistroReqCurso();
-        ventana.start(stage);
+      Stage stage = new Stage();
+      RegistroReqCurso ventana = new RegistroReqCurso();
+      ventana.start(stage);
     });
     
     primaryStage.show();

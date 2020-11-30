@@ -20,8 +20,8 @@ public class SQLConnection {
     
     try {
       // db parameters
-      String url = "jdbc:sqlite:/home/wonmi9501/Documentos/gestorpe";
-    // String url = "jdbc:sqlite:C:/sqlite/gestorpe.db";
+      //String url = "jdbc:sqlite:/home/wonmi9501/Documentos/gestorpe";
+     String url = "jdbc:sqlite:C:/sqlite/gestorpe.db";
       // create a connection to the database
       conn = DriverManager.getConnection(url);
             
