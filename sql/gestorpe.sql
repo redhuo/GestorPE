@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS "curso_correquisito" (
 CREATE TABLE IF NOT EXISTS "bloque" (
 	"plan"	INTEGER NOT NULL,
 	"curso"	TEXT NOT NULL,
-	"numero"	TEXT NOT NULL,
+	"numero" INTEGER NOT NULL,
 	FOREIGN KEY("curso") REFERENCES "curso"("codigo"),
 	PRIMARY KEY("plan","curso"),
 	FOREIGN KEY("plan") REFERENCES "plan_de_estudio"("numero")
