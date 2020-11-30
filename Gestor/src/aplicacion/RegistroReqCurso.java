@@ -33,6 +33,8 @@ public class RegistroReqCurso {
   String correquisito;
   ArrayList<Escuela> escuelas;
   ArrayList<Curso> cursos;
+  ArrayList<Curso> cursosReq;
+  ArrayList<Curso> cursosCor;
   EscuelaDao escuelaDao;
   CursoDao cursoDao;
   
@@ -132,17 +134,27 @@ public class RegistroReqCurso {
     
     //Se activa al seleccionar un curso de la lista desplagable 
     bxCurso.setOnAction((Event ev) -> {
-      curso = bxEscuela.getSelectionModel().getSelectedItem().toString();    
+      curso = bxCurso.getSelectionModel().getSelectedItem().toString();    
+      cursosReq = cursoDao.getCursos();
+      cursosReq.forEach((c) -> {
+        bxRequisito.getItems().add(c.getCodigo());
+      });
+      cursosReq.forEach((c) -> {
+        bxCorrequisito.getItems().add(c.getCodigo());
+      });
     });
     
     //Registra los cursos que son requisito para el curso
     btnRegistrarReq.setOnAction((ActionEvent e) -> {        
       requisito = bxRequisito.getSelectionModel().getSelectedItem().toString();
+      cursoDao.insertarRequisito(curso, requisito);
+      
     });
     
     //Registra los cursos que son correquisito para el curso
     btnRegistrarCo.setOnAction((ActionEvent e) -> {        
       correquisito = bxCorrequisito.getSelectionModel().getSelectedItem().toString();
+      cursoDao.insertarCorrequisito(curso, correquisito);
     });
     
     btnCerrar.setOnAction((ActionEvent e) -> {        

@@ -51,7 +51,7 @@ public class CursoDao {
   }
   
   public void insertarRequisito(String curso,String requisito){
-    String sql = "insert into curso_requisito(curso,requisito) values(?,?)";
+    String sql = "insert into curso_requisito(curso,requisitos) values(?,?)";
     conexion = conexionSqlite.connect();
     PreparedStatement statement;
     try {
