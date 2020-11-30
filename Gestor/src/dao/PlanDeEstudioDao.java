@@ -14,8 +14,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import modelo.Curso;
-import modelo.Escuela;
 import modelo.PlanDeEstudio;
 import utils.SQLConnection;
 
@@ -131,13 +129,14 @@ public class PlanDeEstudioDao {
     return planes; 
   }
   
-  public boolean eliminarPlanCurso(int plan){
+  public boolean eliminarPlanCurso(int plan, String curso){
     boolean eliminado = false;
-    String sql = "DELETE FROM bloque WHERE plan = ?";
+    String sql = "DELETE FROM bloque WHERE plan = ? and curso = ?";
     PreparedStatement statement;
     try{
       statement = conexion.prepareStatement(sql);
-      statement.setString(1,plan);
+      statement.setInt(1,plan);
+      statement.setString(2,curso);
       eliminado = statement.executeUpdate() > 0;
       statement.close(); 
     }

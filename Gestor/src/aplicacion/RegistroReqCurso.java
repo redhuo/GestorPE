@@ -35,6 +35,7 @@ public class RegistroReqCurso {
   ArrayList<Curso> cursos;
   EscuelaDao escuelaDao;
   CursoDao cursoDao;
+  
   /**
    * Inicializa la ventana
    * @param primaryStage 
@@ -66,31 +67,13 @@ public class RegistroReqCurso {
     grid.add(lblEscuela, 0, 1);
     //Lista desplegable de escuelas o areas academicas
     ComboBox bxEscuela = new ComboBox();
-    grid.add(bxEscuela, 1, 1);    
-    escuelaDao = new EscuelaDao();
-    escuelas = escuelaDao.getEscuelas();
-    escuelas.forEach((e) -> {
-      bxEscuela.getItems().add(e.getNombre());
-    });
-    //Se activa al seleccionar una escuela de la lista desplagable
-    bxEscuela.setOnAction((Event ev) -> {
-      escuela = bxEscuela.getSelectionModel().getSelectedItem().toString();    
-    });
+    grid.add(bxEscuela, 1, 1);   
     
     //Lista desplegable de codigo de cursos
     Label lblCurso = new Label("Codigo del curso:");
     grid.add(lblCurso, 0, 2);
     ComboBox bxCurso = new ComboBox();
     grid.add(bxCurso, 1, 2);
-    cursoDao = new CursoDao();
-    cursos = cursoDao.getCursosPorEscuela(escuelaDao.getEscuelaPorNombre(escuela).getCodigo());
-    cursos.forEach((e) -> {
-      bxCurso.getItems().add(e.getNombre());
-    });
-    //Se activa al seleccionar un curso de la lista desplagable 
-    bxCurso.setOnAction((Event ev) -> {
-      curso = bxEscuela.getSelectionModel().getSelectedItem().toString();    
-    });
     
     //Lista desplegable de cursos para registrar los requisitos
     Text tituloRequisito = new Text("Requisitos del curso");
@@ -123,7 +106,34 @@ public class RegistroReqCurso {
     VBox vbBtn = new VBox(10);
     vbBtn.setAlignment(Pos.BASELINE_CENTER);
     vbBtn.getChildren().addAll(lblError, btnCerrar);
-    grid.add(vbBtn, 0, 4, 2, 1);
+    grid.add(vbBtn, 0, 4, 2, 1);    
+    
+    //Cargar datos
+    cursoDao = new CursoDao(); 
+    escuelaDao = new EscuelaDao();
+    escuelas = escuelaDao.getEscuelas();
+    escuelas.forEach((e) -> {
+      bxEscuela.getItems().add(e.getNombre());
+    });    
+    
+    //Se activa al seleccionar una escuela de la lista desplagable
+    bxEscuela.setOnAction((Event ev) -> {
+      escuela = bxEscuela.getSelectionModel().getSelectedItem().toString();    
+      for(Escuela e : escuelas){
+        if(e.getNombre() == escuela){
+          escuela = e.getCodigo();
+        }
+      }
+      cursos = cursoDao.getCursosPorEscuela(escuela);
+      cursos.forEach((c) -> {
+        bxCurso.getItems().add(c.getNombre());
+      });
+    });
+    
+    //Se activa al seleccionar un curso de la lista desplagable 
+    bxCurso.setOnAction((Event ev) -> {
+      curso = bxEscuela.getSelectionModel().getSelectedItem().toString();    
+    });
     
     //Registra los cursos que son requisito para el curso
     btnRegistrarReq.setOnAction((ActionEvent e) -> {        

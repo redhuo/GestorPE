@@ -19,7 +19,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -48,6 +47,9 @@ import utils.Email;
 import utils.PDF;
 
 public class Inicio extends Application {
+  CursoDao cursoDao;
+  EscuelaDao escuelaDao;
+  PlanDeEstudioDao planDeEstudioDao;
   ArrayList<Escuela> escuelas;
   ArrayList<PlanDeEstudio> planesDeEstudio;
   ArrayList<Curso> cursos;
@@ -56,15 +58,13 @@ public class Inicio extends Application {
   ObservableList<Curso> planCursos;
   ObservableList<PlanDeEstudio> cursoPlanes;
   ObservableList<Curso> cursoRequisitos;
-  Escuela escuela;
-  PlanDeEstudio plan;
-  Curso curso;
-  EscuelaDao escuelaDao;
-  PlanDeEstudioDao planDeEstudioDao;
-  CursoDao cursoDao;
-  String escuelaCodigo;
-  String cursoCodigo;
-  int planNumero;
+  Curso cursoSelect;
+  Escuela escuelaSelect;
+  PlanDeEstudio planSelect;
+  int plan;
+  String escuela;
+  String curso;
+  
     
   @Override
   public void start(Stage primaryStage) {
@@ -269,15 +269,13 @@ public class Inicio extends Application {
       for(Escuela e : escuelas){
         if(e.getNombre() == escuela){
           escuela = e.getCodigo();
-          System.out.println("la escuela es "+escuela);
         }
       }
       planesDeEstudio = planDeEstudioDao.getPlanesDeEstudioPorEscuela(escuela);
       bxPlan.getItems().clear();
       planesDeEstudio.forEach((p) -> {
-          System.out.println("el p es "+ p.getNumero());
-          bxPlan.getItems().add(p.getNumero());
-        });
+        bxPlan.getItems().add(p.getNumero());
+      });
       cursos = cursoDao.getCursosPorEscuela(escuela);
       bxCurso.getItems().clear();
       cursos.forEach((c) -> {
@@ -293,7 +291,7 @@ public class Inicio extends Application {
       plan = Integer.parseInt(bxPlan.getSelectionModel().getSelectedItem().toString());
       System.out.println("el plan es "+plan);
       for(PlanDeEstudio p : planesDeEstudio){
-        if(p.getNumero() == planNumero){
+        if(p.getNumero() == plan){
           lblFecha.setText("Vigencia: " + p.getFecha());
         }
       }
@@ -313,10 +311,10 @@ public class Inicio extends Application {
      * Se activa al seleccionar un curso de la lista desplagable 
      */
     bxCurso.setOnAction((Event ev) -> {
-      cursoCodigo = bxCurso.getSelectionModel().getSelectedItem().toString();
-      cursoPlanes = planDeEstudioDao.getPlanesDeEstudioPorCurso(cursoCodigo);
-      requisitos = cursoDao.getCursosRequisitos(cursoCodigo);
-      correquisitos = cursoDao.getCursosCorrequisitos(cursoCodigo);
+      curso = bxCurso.getSelectionModel().getSelectedItem().toString();
+      cursoPlanes = planDeEstudioDao.getPlanesDeEstudioPorCurso(curso);
+      requisitos = cursoDao.getCursosRequisitos(curso);
+      correquisitos = cursoDao.getCursosCorrequisitos(curso);
       cursoRequisitos = FXCollections.observableArrayList();
       requisitos.forEach((curso) -> {
         cursoRequisitos.add(curso);
@@ -328,13 +326,45 @@ public class Inicio extends Application {
       tablaReqs.setItems(cursoRequisitos);
     });
     
+    //Eliminar el curso seleccionado de la tabla de cursos
+    btnEliminarCurso.setOnAction((ActionEvent e) -> { 
+      cursoSelect = (Curso) tablaCursos.getSelectionModel().getSelectedItem();
+      curso = cursoSelect.getCodigo();
+      if(planDeEstudioDao.eliminarPlanCurso(plan,curso)){
+        planCursos.remove(curso);
+      }
+    });
+    
+    //Eliminar plan de estudio de un curso dependiendo
+    btnEliminarPlan.setOnAction((ActionEvent e) -> {   
+      planSelect = (PlanDeEstudio) tablaPlanes.getSelectionModel().getSelectedItem();
+      
+      plan = planSelect.getNumero();
+      if(planDeEstudioDao.eliminarPlanCurso(plan,curso)){
+        cursoPlanes.remove(plan);
+      }
+    });
+    
+    //Eliminar requisito o corresquisito de un curso
+    btnEliminarRequisito.setOnAction((ActionEvent e) -> {    
+      String cursoReqCodigo;
+      cursoSelect = (Curso) tablaCursos.getSelectionModel().getSelectedItem();
+      cursoReqCodigo = cursoSelect.getCodigo();
+      if(cursoDao.eliminarRequisito(cursoReqCodigo, curso)){
+        cursoRequisitos.remove(curso);
+      }
+      else if(cursoDao.eliminarCorrequisito(cursoReqCodigo, curso)){
+        cursoRequisitos.remove(curso);
+      }
+    });
+    
     /**
      * Abre un cuador de dialogo con un espacio para ingresar el correo al que se
      * enviara le PDF generado
      */
     btnGenerarPdf.setOnAction((ActionEvent e) -> {
      // new PDF(Integer.toString(plan)).crearPDF("joss", planCursos);
-      TextInputDialog dialog = new TextInputDialog("walter");
+      TextInputDialog dialog = new TextInputDialog("correo@gmail.com");
       dialog.setTitle("Enviar plan de estudio");
       dialog.setHeaderText("Enviar PDF del plan de estudio");
       dialog.setContentText("Ingrese su correo electronico:");
@@ -343,47 +373,12 @@ public class Inicio extends Application {
       if (result.isPresent()){
         System.out.println("Your name: " + result.get());
         new PDF(Integer.toString(plan)).crearPDF("plandeestudio", planCursos);
-          try {
-              new Email(result.get(),"plandeestudio.pdf",Integer.toString(plan)).enviar();
-          } catch (MessagingException ex) {
-              Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
-          }
-        
-      }
-      // The Java 8 way to get the response value (with lambda expression). 
-      result.ifPresent(name -> System.out.println("Your name: " + name));
-      
-        
-    });
-    
-    //Eliminar el curso seleccionado de la tabla de cursos
-    btnEliminarCurso.setOnAction((ActionEvent e) -> { 
-      curso = (Curso) tablaCursos.getSelectionModel().getSelectedItem();
-      cursoCodigo = curso.getCodigo();
-      if(cursoDao.eliminarCursoPlan(cursoCodigo)){
-        planCursos.remove(curso);
-      }
-    });
-    
-    //Eliminar plan de estudio de un curso dependiendo
-    btnEliminarPlan.setOnAction((ActionEvent e) -> {   
-      plan = (PlanDeEstudio) tablaPlanes.getSelectionModel().getSelectedItem();
-      planNumero = plan.getNumero();
-      if(planDeEstudioDao.eliminarPlanCurso(planNumero)){
-        cursoPlanes.remove(plan);
-      }
-    });
-    
-    //Eliminar requisito o corresquisito de un curso
-    btnEliminarRequisito.setOnAction((ActionEvent e) -> {    
-      String cursoReqCodigo;
-      curso = (Curso) tablaCursos.getSelectionModel().getSelectedItem();
-      cursoReqCodigo = curso.getCodigo();
-      if(cursoDao.eliminarRequisito(cursoReqCodigo, cursoCodigo)){
-        cursoRequisitos.remove(curso);
-      }
-      else if(cursoDao.eliminarCorrequisito(cursoReqCodigo, cursoCodigo)){
-        cursoRequisitos.remove(curso);
+        try {
+          new Email(result.get(),"plandeestudio.pdf",Integer.toString(plan)).enviar();
+        } 
+        catch (MessagingException ex) {
+          Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        }        
       }
     });
     

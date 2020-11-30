@@ -1,6 +1,6 @@
 /**
  * Ventana de registro de curso
- * @author WonMi Lim y Jimmy Tsang
+ * @author WonMi Lim
  */
 
 package aplicacion;
@@ -158,7 +158,6 @@ public class RegistroCurso {
     btnLimpiar.setOnAction((ActionEvent e) -> { 
       txtNombre.clear();
       txtCodigo.clear();
-      lblCodigoEscuela.setText("");
       lblError.setText("");
       nombre = null;
       codigo = null;

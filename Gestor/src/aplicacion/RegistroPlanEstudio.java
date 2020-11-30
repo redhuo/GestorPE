@@ -5,6 +5,7 @@
 
 package aplicacion;
 
+import dao.CursoDao;
 import java.util.ArrayList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -25,6 +26,7 @@ import javafx.stage.Stage;
 import modelo.Escuela;
 import dao.EscuelaDao;
 import dao.PlanDeEstudioDao;
+import modelo.Curso;
 import modelo.PlanDeEstudio;
 
 public class RegistroPlanEstudio {
@@ -34,6 +36,8 @@ public class RegistroPlanEstudio {
   String curso;
   String bloque;
   ArrayList<Escuela> escuelas;
+  ArrayList<Curso> cursos;
+  CursoDao cursoDao;
   EscuelaDao escuelaDao;
   PlanDeEstudioDao planDao;
   /**
@@ -70,12 +74,7 @@ public class RegistroPlanEstudio {
     escuelaDao = new EscuelaDao();
     escuelas = escuelaDao.getEscuelas();
     escuelas.forEach((e) -> {
-    bxEscuela.getItems().add(e.getNombre());
-    });
-    //Se activa al seleccionar una escuela de la lista desplagable
-    bxEscuela.setOnAction((Event ev) -> {
-      escuela = bxEscuela.getSelectionModel().getSelectedItem().toString();  
-      System.out.println("La escuelas es " + escuela);
+      bxEscuela.getItems().add(e.getNombre());
     });
 
     //Campo de texto para codigo del plan de estudio 
@@ -100,8 +99,14 @@ public class RegistroPlanEstudio {
     //Campo de texto para los cursos pertenecientes a este plan de estudio
     Label lblCurso = new Label("Codigo del curso:");
     grid.add(lblCurso, 0, 5);    
-    TextField txtCurso = new TextField();
-    grid.add(txtCurso, 1, 5);
+    //Lista desplegable de escuelas o areas academicas
+    ComboBox bxCurso = new ComboBox();
+    grid.add(bxCurso, 1, 5);    
+    cursoDao = new CursoDao();
+    cursos = cursoDao.getCursos();
+    cursos.forEach((c) -> {
+      bxCurso.getItems().add(c.getCodigo());
+    });
     
     //Lista desplegable para seleccionar el bloque al que pertenece el curso en el plan de estudio
     Label lblBloque = new Label("Bloque:");
@@ -119,10 +124,7 @@ public class RegistroPlanEstudio {
         "VIII Semestre",
         "IX Semestre",
         "X Semestre");
-    bxBloque.setOnAction((Event ev) -> {
-      bloque = bxBloque.getSelectionModel().getSelectedItem().toString();  
-      System.out.println("El bloque es " + bloque);
-    });
+    
     Button btnRegistrarCurso = new Button("Registrar curso al plan de estudio");
     HBox hbBtnRegistrarCurso = new HBox(10);
     hbBtnRegistrarCurso.setAlignment(Pos.CENTER);
@@ -145,19 +147,22 @@ public class RegistroPlanEstudio {
     btnLimpiar.setOnAction((ActionEvent e) -> { 
       txtCodigo.clear();
       txtFecha.clear();
-      txtCurso.clear();
     });
     
     //Registra el plan de estudio
     btnRegistrar.setOnAction((ActionEvent e) -> {        
       //lblError.setText("Error en los datos ingresados");
+      escuela = bxEscuela.getSelectionModel().getSelectedItem().toString();  
+      for(Escuela esc : escuelas){
+        if(esc.getNombre() == escuela){
+          escuela = esc.getCodigo();
+        }
+      }
       this.codigo = txtCodigo.getText();
       this.fecha = txtFecha.getText();
-      System.out.println(escuela);
       if(this.codigo.length() == 4 && this.fecha != "" && this.escuela != ""){
-        System.out.println("La escuelas 2 es " + escuelaDao.getEscuelaPorNombre(escuela).getCodigo());
-          PlanDeEstudio nuevo = new PlanDeEstudio(Integer.parseInt(this.codigo),this.fecha,escuelaDao.getEscuelaPorNombre(escuela).getCodigo());
-          new PlanDeEstudioDao().insertarNuevoPlan(nuevo);
+        PlanDeEstudio nuevo = new PlanDeEstudio(Integer.parseInt(this.codigo),this.fecha,escuela);
+        new PlanDeEstudioDao().insertarNuevoPlan(nuevo);
       }
       else{
         lblError.setText("Error en los datos ingresados");
@@ -166,7 +171,8 @@ public class RegistroPlanEstudio {
     
     //Registra un curso al plan de estudio
     btnRegistrarCurso.setOnAction((ActionEvent e) -> {   
-      this.curso = txtCurso.getText();
+      bloque = bxBloque.getSelectionModel().getSelectedItem().toString();
+      curso = bxCurso.getSelectionModel().getSelectedItem().toString();   
       this.codigo = txtCodigo.getText();
       int aux = 0;
       if(this.curso != "" && this.codigo != "" && this.bloque != ""){

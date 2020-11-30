@@ -81,6 +81,29 @@ public class CursoDao {
       }
   }
   
+  public ArrayList<Curso> getCursos(){
+    String sql = "select * from curso";
+    PreparedStatement statement;
+    ArrayList<Curso> cursos = new ArrayList<Curso>();
+    conexion = conexionSqlite.connect();
+    try {
+      statement = conexion.prepareStatement(sql);
+      ResultSet resultado = statement.executeQuery();
+      while(resultado.next()) {
+        Curso nuevo = new Curso(resultado.getString("codigo"), resultado.getString("nombre"), 
+            resultado.getInt("creditos"), resultado.getInt("horas_lectivas"), resultado.getString("escuela"));
+        cursos.add(nuevo);
+        System.out.println(nuevo.getNombre());
+      }
+      resultado.close();
+      statement.close();
+    } 
+    catch (SQLException ex) {
+      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return cursos; 
+  }
+  
   public ArrayList<Curso> getCursosPorEscuela(String codigoEscuela){
     String sql = "select * from curso where escuela = ?";
     PreparedStatement statement;
@@ -310,21 +333,5 @@ public class CursoDao {
       Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
     }
     return false;
-  }
-  
-  public boolean eliminarCursoPlan(String curso){
-    boolean eliminado = false;
-    String sql = "DELETE FROM bloque WHERE curso = ?";
-    PreparedStatement statement;
-    try{
-      statement = conexion.prepareStatement(sql);
-      statement.setString(1,curso);
-      eliminado = statement.executeUpdate() > 0;
-      statement.close(); 
-    }
-    catch(SQLException ex){
-      Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    return eliminado;
   }
 }

@@ -1,6 +1,6 @@
 /**
  * Ventana de registro de escuela o area academica
- * @author WonMi Lim y Jimmy Tsang
+ * @author WonMi Lim
  */
 
 package aplicacion;
