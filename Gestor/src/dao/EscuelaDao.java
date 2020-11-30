@@ -57,7 +57,6 @@ public class EscuelaDao {
         while(resultado.next()) {
 	  Escuela escuela = new Escuela(resultado.getString("codigo"), resultado.getString("nombre"));
           listaEscuela.add(escuela);
-          System.out.println(resultado.getString("nombre"));
         }
         resultado.close();
         statement.close();
@@ -66,11 +65,5 @@ public class EscuelaDao {
         Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
       }
       return listaEscuela;
-  }
-
-  public static void main (String[] args){
-    EscuelaDao escuela = new EscuelaDao();
-    Escuela nuevo = new Escuela("IC","Escuela de Ingeniería en Computación");
-    //escuela.insertarNuevaEscuela(nuevo);
   }
 }

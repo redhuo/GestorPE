@@ -117,7 +117,6 @@ public class CursoDao {
         Curso nuevo = new Curso(resultado.getString("codigo"), resultado.getString("nombre"), 
             resultado.getInt("creditos"), resultado.getInt("horas_lectivas"), codigoEscuela);
         cursos.add(nuevo);
-        System.out.println(nuevo.getNombre());
       }
       resultado.close();
       statement.close();

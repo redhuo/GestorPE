@@ -1,7 +1,7 @@
 /**
  * Ventana de inicio de la aplicacion, consulta de plan de estudio, consulta de
  * curso y eliminacion de curso y requisito y correquisito de un curso
- * @author WonMi Lim
+ * @author WonMi y Jimmy
  */
 
 package aplicacion;
@@ -50,6 +50,9 @@ public class Inicio extends Application {
   CursoDao cursoDao;
   EscuelaDao escuelaDao;
   PlanDeEstudioDao planDeEstudioDao;
+  Curso cursoSelect;
+  Escuela escuelaSelect;
+  PlanDeEstudio planSelect;
   ArrayList<Escuela> escuelas;
   ArrayList<PlanDeEstudio> planesDeEstudio;
   ArrayList<Curso> cursos;
@@ -58,12 +61,9 @@ public class Inicio extends Application {
   ObservableList<Curso> planCursos;
   ObservableList<PlanDeEstudio> cursoPlanes;
   ObservableList<Curso> cursoRequisitos;
-  Curso cursoSelect;
-  Escuela escuelaSelect;
-  PlanDeEstudio planSelect;
-  int plan;
-  String escuela;
   String curso;
+  String escuela;
+  int plan;
   
     
   @Override
@@ -118,7 +118,7 @@ public class Inicio extends Application {
     colCodigo.setMinWidth(50);
     colCodigo.setCellValueFactory( new PropertyValueFactory<Curso,StringProperty>("codigo"));
     TableColumn<Curso,String> colNombre = new TableColumn("Nombre");
-    colNombre.setMinWidth(270);
+    colNombre.setMinWidth(200);
     colNombre.setCellValueFactory( new PropertyValueFactory<>("nombre"));
     TableColumn colBloque = new TableColumn("Bloque");
     colBloque.setMinWidth(100);
@@ -165,16 +165,14 @@ public class Inicio extends Application {
     Label lblCodigoCurso = new Label("Codigo:");
     //Lista desplegable de codigo de cursos
     ComboBox bxCurso = new ComboBox();
-    HBox hbCurso = new HBox(10);
-    hbCurso.setAlignment(Pos.CENTER);
-    hbCurso.getChildren().addAll(lblCodigoCurso, bxCurso);
-    grid.add(hbCurso, 1, 4);
     //Boton para eliminar un plan de estudio del curso 
     Button btnEliminarPlan = new Button("Eliminar Plan");
-    grid.add(btnEliminarPlan, 2, 4);
     //Boton para eliminar un plan de estudio del curso 
     Button btnEliminarRequisito = new Button("Eliminar Requisito");
-    grid.add(btnEliminarRequisito, 3, 4);
+    HBox hbCurso = new HBox(10);
+    hbCurso.setAlignment(Pos.CENTER);
+    hbCurso.getChildren().addAll(lblCodigoCurso, bxCurso, btnEliminarPlan, btnEliminarRequisito);
+    grid.add(hbCurso, 1, 4, 3, 1);
     
     //Tabla de planes de estudio que presentan el curso
     Text lblTablaPlanes = new Text("Planes de estudio que presentan el curso");
@@ -288,7 +286,6 @@ public class Inicio extends Application {
      */
     bxPlan.setOnAction((Event ev) -> {
       plan = Integer.parseInt(bxPlan.getSelectionModel().getSelectedItem().toString());
-      System.out.println("el plan es "+plan);
       for(PlanDeEstudio p : planesDeEstudio){
         if(p.getNumero() == plan){
           lblFecha.setText("Vigencia: " + p.getFecha());
@@ -326,33 +323,40 @@ public class Inicio extends Application {
     
     //Eliminar el curso seleccionado de la tabla de cursos
     btnEliminarCurso.setOnAction((ActionEvent e) -> { 
-      cursoSelect = (Curso) tablaCursos.getSelectionModel().getSelectedItem();
-      System.out.println("tabla cursos "+cursoSelect.getCodigo());
-      curso = cursoSelect.getCodigo();
-      if(planDeEstudioDao.eliminarPlanCurso(plan,curso)){
-        planCursos.remove(curso);
+      int indice = tablaCursos.getSelectionModel().getSelectedIndex();
+      if(indice>-1){
+        cursoSelect = (Curso) tablaCursos.getSelectionModel().getSelectedItem();
+        System.out.println(indice);
+        curso = cursoSelect.getCodigo();
+        if(planDeEstudioDao.eliminarPlanCurso(plan,curso)){
+          planCursos.remove(indice);
+        }
       }
     });
     
     //Eliminar plan de estudio de un curso dependiendo
     btnEliminarPlan.setOnAction((ActionEvent e) -> {   
-      planSelect = (PlanDeEstudio) tablaPlanes.getSelectionModel().getSelectedItem();
-      plan = planSelect.getNumero();
-      if(planDeEstudioDao.eliminarPlanCurso(plan,curso)){
-        cursoPlanes.remove(plan);
+      int indice = tablaPlanes.getSelectionModel().getSelectedIndex();
+      if(indice>-1){
+        planSelect = (PlanDeEstudio) tablaPlanes.getSelectionModel().getSelectedItem();
+        plan = planSelect.getNumero();
+        if(planDeEstudioDao.eliminarPlanCurso(plan,curso)){
+          cursoPlanes.remove(indice);
+        }
       }
     });
     
     //Eliminar requisito o corresquisito de un curso
-    btnEliminarRequisito.setOnAction((ActionEvent e) -> {    
-      String cursoReqCodigo;
-      cursoSelect = (Curso) tablaCursos.getSelectionModel().getSelectedItem();
-      cursoReqCodigo = cursoSelect.getCodigo();
-      if(cursoDao.eliminarRequisito(cursoReqCodigo, curso)){
-        cursoRequisitos.remove(curso);
-      }
-      else if(cursoDao.eliminarCorrequisito(cursoReqCodigo, curso)){
-        cursoRequisitos.remove(curso);
+    btnEliminarRequisito.setOnAction((ActionEvent e) -> { 
+      int indice = tablaReqs.getSelectionModel().getSelectedIndex();
+      if(indice>-1){
+        String cursoReqCodigo;
+        cursoSelect = (Curso) tablaCursos.getSelectionModel().getSelectedItem();
+        cursoReqCodigo = cursoSelect.getCodigo();
+        if(cursoDao.eliminarRequisito(cursoReqCodigo, curso)||
+            cursoDao.eliminarCorrequisito(cursoReqCodigo, curso)){
+          cursoRequisitos.remove(indice);
+        }
       }
     });
     

@@ -67,17 +67,15 @@ public class PlanDeEstudioDao {
     PreparedStatement statement;
     String codigoCurso = "";
     ArrayList<PlanDeEstudio> planes = new ArrayList<>();
-    System.out.println("Aqui 1 "+ codigoEscuela);
     conexion = conexionSqlite.connect();
     try {
       statement = conexion.prepareStatement(sql);
       statement.setString(1,codigoEscuela);
       ResultSet resultado = statement.executeQuery();
-      System.out.println("Aqui 2 " + resultado.getString("fechaVigencia"));
       if (resultado.next()) {
-	PlanDeEstudio nuevo = new PlanDeEstudio(resultado.getInt("numero"), resultado.getString("fechaVigencia"), resultado.getString("escuela"));
+	PlanDeEstudio nuevo = new PlanDeEstudio(resultado.getInt("numero"), 
+            resultado.getString("fechaVigencia"), resultado.getString("escuela"));
         planes.add(nuevo);
-        System.out.println("Aqui "+nuevo.getNumero());
       }
       resultado.close();
       statement.close();
@@ -92,15 +90,16 @@ public class PlanDeEstudioDao {
     String sql = "select * from bloque where curso = ?";
     String sql2 = "select * from plan_de_estudio where numero = ?";
     PreparedStatement statement;
-    ArrayList<Integer> numeros = new ArrayList<>();
+    ArrayList<Integer> numeros = new ArrayList<Integer>();
     ObservableList<PlanDeEstudio> planes = FXCollections.observableArrayList();
     conexion = conexionSqlite.connect();
     try {
       statement = conexion.prepareStatement(sql);
       statement.setString(1,curso);
       ResultSet resultado = statement.executeQuery();
-      if (resultado.next()) {
-	numeros.add(resultado.getInt("plan"));
+      while (resultado.next()) {
+	numeros.add(resultado.getInt(1));
+        System.out.println("busca plan "+resultado.getInt(1));
       }
       resultado.close();
       statement.close();
