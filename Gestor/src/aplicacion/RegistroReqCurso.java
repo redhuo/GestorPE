@@ -126,7 +126,7 @@ public class RegistroReqCurso {
       }
       cursos = cursoDao.getCursosPorEscuela(escuela);
       cursos.forEach((c) -> {
-        bxCurso.getItems().add(c.getNombre());
+        bxCurso.getItems().add(c.getCodigo());
       });
     });
     

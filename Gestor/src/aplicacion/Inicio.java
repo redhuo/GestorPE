@@ -100,12 +100,11 @@ public class Inicio extends Application {
     Label lblCodigoPlan = new Label("Codigo:");
     //Lista desplegable de codigo de planes de estudio
     ComboBox bxPlan = new ComboBox();
+    Label lblFecha = new Label("Vigencia:");
     HBox hbPlan = new HBox(10);
     hbPlan.setAlignment(Pos.CENTER);
-    hbPlan.getChildren().addAll(lblCodigoPlan, bxPlan);
-    grid.add(hbPlan, 1, 1);
-    Label lblFecha = new Label("Vigencia:");
-    grid.add(lblFecha, 3, 1);
+    hbPlan.getChildren().addAll(lblCodigoPlan, bxPlan, lblFecha);
+    grid.add(hbPlan, 1, 1, 3, 1);
     
     //Tabla de cursos pertenecientes al plan de estudio
     Text lblTablaCursos = new Text("Cursos del plan de estudio");
@@ -296,15 +295,10 @@ public class Inicio extends Application {
         }
       }
       planCursos = cursoDao.getCursosPorPlan(plan);
-      System.out.println("hola aqui esta "+ planCursos.get(0).getCodigo()+planCursos.get(0).getNombre());
       tablaCursos.setItems(planCursos);
-      System.out.println("hola aqui esta 2 "+ tablaCursos.getItems().get(0).getCodigo());
       tablaCursos.getColumns().clear();
       tablaCursos.getColumns().addAll(colCodigo, colNombre, 
         colBloque, colHoras, colCreditos);
-      System.out.println("no sirve " + colNombre.getCellData(0));
-     // tablaCursos.
-      
     });
     
     /**
@@ -323,12 +317,17 @@ public class Inicio extends Application {
         cursoRequisitos.add(curso);
       });
       tablaPlanes.setItems(cursoPlanes);
+      tablaPlanes.getColumns().clear();
+      tablaPlanes.getColumns().addAll(colNumero, colEscuela, colVigencia, colBloque);
       tablaReqs.setItems(cursoRequisitos);
+      tablaReqs.getColumns().clear();
+      tablaReqs.getColumns().addAll(colCodigo, colNombreR, colEscuela, colHoras, colCreditos);
     });
     
     //Eliminar el curso seleccionado de la tabla de cursos
     btnEliminarCurso.setOnAction((ActionEvent e) -> { 
       cursoSelect = (Curso) tablaCursos.getSelectionModel().getSelectedItem();
+      System.out.println("tabla cursos "+cursoSelect.getCodigo());
       curso = cursoSelect.getCodigo();
       if(planDeEstudioDao.eliminarPlanCurso(plan,curso)){
         planCursos.remove(curso);
@@ -338,7 +337,6 @@ public class Inicio extends Application {
     //Eliminar plan de estudio de un curso dependiendo
     btnEliminarPlan.setOnAction((ActionEvent e) -> {   
       planSelect = (PlanDeEstudio) tablaPlanes.getSelectionModel().getSelectedItem();
-      
       plan = planSelect.getNumero();
       if(planDeEstudioDao.eliminarPlanCurso(plan,curso)){
         cursoPlanes.remove(plan);
