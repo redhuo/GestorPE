@@ -24,6 +24,8 @@ import modelo.Escuela;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import dao.CursoDao;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import modelo.Curso;
 
 public class RegistroReqCurso {
@@ -146,15 +148,34 @@ public class RegistroReqCurso {
     
     //Registra los cursos que son requisito para el curso
     btnRegistrarReq.setOnAction((ActionEvent e) -> {        
-      requisito = bxRequisito.getSelectionModel().getSelectedItem().toString();
-      cursoDao.insertarRequisito(curso, requisito);
+      try{
+        requisito = bxRequisito.getSelectionModel().getSelectedItem().toString();
+        cursoDao.insertarRequisito(curso, requisito);
+      }
+      catch(Exception a){
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Informacion del sistema");
+        alert.setHeaderText(null);
+        alert.setContentText("Por favor seleccione curso de la lista");
+        alert.showAndWait();
+      }
       
     });
     
     //Registra los cursos que son correquisito para el curso
     btnRegistrarCo.setOnAction((ActionEvent e) -> {        
-      correquisito = bxCorrequisito.getSelectionModel().getSelectedItem().toString();
-      cursoDao.insertarCorrequisito(curso, correquisito);
+      try{
+        correquisito = bxCorrequisito.getSelectionModel().getSelectedItem().toString();
+        cursoDao.insertarCorrequisito(curso, correquisito);
+      }
+      catch(Exception a){
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Informacion del sistema");
+        alert.setHeaderText(null);
+        alert.setContentText("Por favor seleccione curso de la lista");
+        alert.showAndWait();
+      }
+      
     });
     
     btnCerrar.setOnAction((ActionEvent e) -> {        

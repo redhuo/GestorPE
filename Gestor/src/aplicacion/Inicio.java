@@ -166,7 +166,7 @@ public class Inicio extends Application {
     //Lista desplegable de codigo de cursos
     ComboBox bxCurso = new ComboBox();
     //Boton para eliminar un plan de estudio del curso 
-    Button btnEliminarPlan = new Button("Eliminar Plan");
+    Button btnEliminarPlan = new Button("Eliminar Curso del Plan");
     //Boton para eliminar un plan de estudio del curso 
     Button btnEliminarRequisito = new Button("Eliminar Requisito");
     HBox hbCurso = new HBox(10);
@@ -307,6 +307,7 @@ public class Inicio extends Application {
       tablaPlanes.getColumns().clear();
       curso = bxCurso.getSelectionModel().getSelectedItem().toString();
       cursoPlanes = planDeEstudioDao.getPlanesDeEstudioPorCurso(curso);
+      System.out.println("deploy "+curso);
       requisitos = cursoDao.getCursosRequisitos(curso);
       correquisitos = cursoDao.getCursosCorrequisitos(curso);
       cursoRequisitos = FXCollections.observableArrayList();

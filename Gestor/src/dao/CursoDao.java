@@ -16,6 +16,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import modelo.Curso;
 
 /**
@@ -162,7 +164,16 @@ public class CursoDao {
           System.out.println(nuevo.getNombre());
         }
       }      
-      resultado.close();
+      try{
+          resultado.close();
+      }
+      catch(Exception e){
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Mensade del plan");
+        alert.setHeaderText(null);
+        alert.setContentText("Plan seleccionado no presenta cursos");
+        alert.showAndWait();
+      }
       statement.close();
     } 
     catch (SQLException ex) {
@@ -185,7 +196,7 @@ public class CursoDao {
       while(resultado.next()) {
 	codigos.add(resultado.getString("requisitos"));
       }
-      resultado.close();
+    //  resultado.close();
       statement.close();
     } 
     catch (SQLException ex) {
@@ -194,6 +205,7 @@ public class CursoDao {
     try {
       statement = conexion.prepareStatement(sql2);
       ResultSet resultado = null;
+      
       for(String codigo : codigos){
         statement.setString(1,codigo);
         resultado = statement.executeQuery();
@@ -201,10 +213,10 @@ public class CursoDao {
           Curso nuevo = new Curso(resultado.getString("codigo"), resultado.getString("nombre"), 
               resultado.getInt("creditos"), resultado.getInt("horas_lectivas"), resultado.getString("escuela"));
           cursos.add(nuevo);
-          System.out.println(nuevo.getNombre());
+          System.out.println("aqui j2 : " + nuevo.getNombre());
         }
       }      
-      resultado.close();
+//      resultado.close();
       statement.close();
     } 
     catch (SQLException ex) {
@@ -233,7 +245,7 @@ public class CursoDao {
           codigos.add(resultado.getString("curso"));
         }
       }
-      resultado.close();
+      //resultado.close();
       statement.close();
     } 
     catch (SQLException ex) {
@@ -249,10 +261,11 @@ public class CursoDao {
           Curso nuevo = new Curso(resultado.getString("codigo"), resultado.getString("nombre"), 
               resultado.getInt("creditos"), resultado.getInt("horas_lectivas"), resultado.getString("escuela"));
           cursos.add(nuevo);
-          System.out.println(nuevo.getNombre());
+         // System.out.println(nuevo.getNombre());
+          System.out.println("aqui j3 : " + nuevo.getNombre());
         }
       }      
-      resultado.close();
+      //resultado.close();
       statement.close();
     } 
     catch (SQLException ex) {
