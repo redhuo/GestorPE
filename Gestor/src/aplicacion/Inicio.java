@@ -22,6 +22,7 @@ import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -328,14 +329,19 @@ public class Inicio extends Application {
     
     //Eliminar el curso seleccionado de la tabla de cursos
     btnEliminarCurso.setOnAction((ActionEvent e) -> { 
-      int indice = tablaCursos.getSelectionModel().getSelectedIndex();
-      if(indice>-1){
-        cursoSelect = (Curso) tablaCursos.getSelectionModel().getSelectedItem();
-        System.out.println(indice);
-        curso = cursoSelect.getCodigo();
-        if(planDeEstudioDao.eliminarPlanCurso(plan,curso)){
-          planCursos.remove(indice);
-        }
+      if(cursoDao.eliminarCurso(curso)){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Informacion del sistema");
+        alert.setHeaderText(null);
+        alert.setContentText("Curso se ha borrado exitosamente");
+        alert.showAndWait();   
+      }
+      else{
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Informacion del sistema");
+        alert.setHeaderText(null);
+        alert.setContentText("Por favor borre el curso de los planes de estudio primero");
+        alert.showAndWait();
       }
     });
     

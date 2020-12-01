@@ -180,6 +180,7 @@ public class PlanDeEstudioDao {
     catch(SQLException ex){
       Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
     }
+    
     return eliminado;
   }
   

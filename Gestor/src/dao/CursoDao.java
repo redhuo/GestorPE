@@ -407,6 +407,7 @@ public class CursoDao {
       if (resultado.next()) {
         if(resultado.getInt("total")>0){
           System.out.println("Curso se encuentra en un plan de estudio");
+          statement.close(); 
           return false;
         }
       }
@@ -419,6 +420,7 @@ public class CursoDao {
       statement = conexion.prepareStatement(sql2);
       statement.setString(1,curso);
       if(statement.executeUpdate() > 0){
+          statement.close(); 
           return true;
       };
       statement.close(); 
@@ -426,6 +428,7 @@ public class CursoDao {
     catch(SQLException ex){
       Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
     }
+    
     return false;
   }
 }
