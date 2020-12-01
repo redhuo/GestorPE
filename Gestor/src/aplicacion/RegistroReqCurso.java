@@ -122,6 +122,7 @@ public class RegistroReqCurso {
     
     //Se activa al seleccionar una escuela de la lista desplagable
     bxEscuela.setOnAction((Event ev) -> {
+      bxCurso.getItems().clear();
       escuela = bxEscuela.getSelectionModel().getSelectedItem().toString();    
       for(Escuela e : escuelas){
         if(e.getNombre() == escuela){
@@ -136,6 +137,8 @@ public class RegistroReqCurso {
     
     //Se activa al seleccionar un curso de la lista desplagable 
     bxCurso.setOnAction((Event ev) -> {
+      bxRequisito.getItems().clear();
+      bxCorrequisito.getItems().clear();
       curso = bxCurso.getSelectionModel().getSelectedItem().toString();    
       cursosReq = cursoDao.getCursos();
       cursosReq.forEach((c) -> {
