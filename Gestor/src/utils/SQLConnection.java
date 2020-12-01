@@ -1,21 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
 /**
- *
- * @author Arco Iris
+ * Clase que se encarga de crear una conexión con la base de datos.
  */
 public class SQLConnection {
   
   private Connection conn = null;
   
+  /**
+   * Método que se encarga de conectar el gestor con la base de datos.
+   * Retorna la conexión.
+   * @return 
+   */
   public Connection connect() {
     
     try {
