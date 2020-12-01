@@ -1,7 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Clase que se encarga de hacer todo el proceso para la correcta creación de
+ * de un archivo PDF.
  */
 package utils;
 
@@ -33,10 +32,24 @@ public class PDF{
   private static Font normalFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
   private static Font titleFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
   private static String plan;
+  
+  /**
+   * Contructor de la clase PDF.
+   * Recibe como entrada el número del plan.
+   * @param pPlan 
+   */
   public PDF(String pPlan) {
     plan = pPlan;
   }
-	
+
+  /**
+   * Método que se encarga se comenzar la creación del archivo PDF.
+   * Recibe como parámetros el nombre al cual se quiere nombrar el archivo PDF y 
+   * una lista de los cursos que posee el plan que se meciono en el contructor.
+   * Retorna vacío.
+   * @param nombre
+   * @param cursos 
+   */
   public void crearPDF(String nombre,ObservableList<Curso> cursos) {
     Document document = new Document();
     
@@ -66,57 +79,44 @@ public class PDF{
     }
   }
   
-
-
-    
-   private static PdfPTable createTable(ObservableList<Curso> cursos) throws BadElementException {
-        PdfPTable table = new PdfPTable(5);
-
-        PdfPCell c1 = new PdfPCell(new Phrase("Codigo"));
-        c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-        table.addCell(c1);
-
-        c1 = new PdfPCell(new Phrase("Nombre"));
-        c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-        table.addCell(c1);
-
-        c1 = new PdfPCell(new Phrase("Bloque"));
-        c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-        table.addCell(c1);
+  /**
+   * Método privado que presta sus servicios al método crearPDF para crear una tabla
+   * con los datos de los cursos de un plan.
+   * Recibe como parámetro una lista de los cursos de un plan.
+   * Retorna un objeto PdfPTable creado.
+   * @param cursos
+   * @return
+   * @throws BadElementException 
+   */
+  private static PdfPTable createTable(ObservableList<Curso> cursos) throws BadElementException {
         
-        c1 = new PdfPCell(new Phrase("Horas Lectivas"));
-        c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-        table.addCell(c1);
-        
-        c1 = new PdfPCell(new Phrase("Créditos"));
-        c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-        table.addCell(c1);
-        table.setHeaderRows(1);
-
-      /* table.addCell("1.0");
-      table.addCell("1.1");
-      table.addCell("1.2");
-      table.addCell("2.1");
-      table.addCell("2.2");
-      table.addCell("2.3");*/
-      for (Curso curso : cursos) {
-        table.addCell(curso.getCodigo());
-        table.addCell(curso.getNombre());
-        table.addCell(curso.getBloque());
-        table.addCell(Integer.toString(curso.getCreditos()));
-        table.addCell(Integer.toString(curso.getHorasLectivas()));
-      }
-      return table;
-
+    PdfPTable table = new PdfPTable(5);
+    PdfPCell c1 = new PdfPCell(new Phrase("Codigo"));
+    c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+    table.addCell(c1);
+    c1 = new PdfPCell(new Phrase("Nombre"));
+    c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+    table.addCell(c1);
+    c1 = new PdfPCell(new Phrase("Bloque"));
+    c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+    table.addCell(c1);
+    c1 = new PdfPCell(new Phrase("Horas Lectivas"));
+    c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+    table.addCell(c1);       
+    c1 = new PdfPCell(new Phrase("Créditos"));
+    c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+    table.addCell(c1);
+    table.setHeaderRows(1);
+    for (Curso curso : cursos) {
+      table.addCell(curso.getCodigo());
+      table.addCell(curso.getNombre());
+      table.addCell(curso.getBloque());
+      table.addCell(Integer.toString(curso.getCreditos()));
+      table.addCell(Integer.toString(curso.getHorasLectivas()));
     }
+    return table;
+  }
    
-    private static void addEmptyLine(Paragraph paragraph, int number) {
-        for (int i = 0; i < number; i++) {
-            paragraph.add(new Paragraph(" "));
-        }
-    }
-  
-  
   public static void main(String[] args){
     PDF hola = new PDF("plan");
     hola.crearPDF("joss",null);

@@ -1,7 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Clase encargada de permitir al sistema mandar por correo electrónico los diferentes planes de estudio 
+ * que estan registrados en el sistema.
  */
 package utils;
 
@@ -27,12 +26,27 @@ public class Email {
   String correo;
   String archivo;
   String numeroPlan;
+  
+  /**
+   * Mètodo cconstructor de la clase Email, recibe como entrada el correo electrònico 
+   * de la persona destinaria, la direcciòn deonde esta guardado el archivo y el nùmero del plan
+   * que se esta mandando.
+   * @param correo
+   * @param archivo
+   * @param numeroPlan 
+   */
   public Email(String correo,String archivo, String numeroPlan)  {
     this.correo = correo;
     this.archivo = archivo;
     this.numeroPlan = numeroPlan;
   }
-    
+  /**
+   * Método de la clase Email que se encarga de hacer el trabajo de enviar el plan del curso en formato 
+   * PDF a la persona destinaria. 
+   * Imprimime un mensaje de éxito si fue posible el envío, de lo contrario imprime una excepción.
+   * Retorna vacío.
+   * @throws MessagingException 
+   */
   public void enviar() throws MessagingException {
     String host = "smtp.gmail.com";
     String Password = "rapiexpress1234";
@@ -63,7 +77,7 @@ public class Email {
       Transport tr = session.getTransport("smtps");
       tr.connect(host, from, Password);
       tr.sendMessage(message, message.getAllRecipients());
-      System.out.println("Mail Sent Successfully");
+      System.out.println("Mensaje se ha mandado");
       tr.close();
     } 
     catch (SendFailedException sfe) {

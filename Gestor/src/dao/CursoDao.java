@@ -21,18 +21,30 @@ import javafx.scene.control.Alert.AlertType;
 import modelo.Curso;
 
 /**
- *
- * @author Jimmy
+ * Clase que se encarga de accesar a a la base de datos y adquirir toda la información
+ * relacionada a los cursos.
+ * 
  */
 public class CursoDao {
     
   private SQLConnection conexionSqlite;
   private Connection conexion;
   
+  /**
+   * Contructor de la clase CursoDao.
+   * No recibe nada como parámetro. Se encarga de inicializar la conexión con la base de datos.
+   */
   public CursoDao(){
     conexionSqlite = new SQLConnection();
   }
   
+  /**
+   * Método que se escarga de insertar nuevos cursos a la base de datos.
+   * Recibe como parámetro el codigo del nuevo curso y el codigo de la escuela 
+   * al que pertenece el curso.
+   * @param nuevo
+   * @param codigoEscuela 
+   */
   public void insertarNuevoCurso(Curso nuevo,String codigoEscuela){
     String sql = "insert into curso(codigo,nombre,creditos,horas_lectivas,escuela) values(?,?,?,?,?)";
     conexion = conexionSqlite.connect();
@@ -52,6 +64,13 @@ public class CursoDao {
     }
   }
   
+  /**
+   * Método que se encarga de ingresar a la base de datos los requisitos de un curso.
+   * Recibe como parámetro el código del curso al cual se le esta relacionando un requisito y 
+   * el codigo del curso requisito.
+   * @param curso
+   * @param requisito 
+   */
   public void insertarRequisito(String curso,String requisito){
     String sql = "insert into curso_requisito(curso,requisitos) values(?,?)";
     conexion = conexionSqlite.connect();
@@ -67,6 +86,13 @@ public class CursoDao {
         Logger.getLogger(EscuelaDao.class.getName()).log(Level.SEVERE, null, ex);
       }
   }
+  /**
+   * Método que se encarga de ingresar a la base de datos los requisitos de un curso.
+   * Recibe como parámetro el código del curso al cual se le esta relacionando un requisito y 
+   * el codigo del curso correquisito.
+   * @param curso
+   * @param correquisito 
+   */
   public void insertarCorrequisito(String curso,String correquisito){
     String sql = "insert into curso_correquisito(curso,correquisito) values(?,?)";
     conexion = conexionSqlite.connect();
@@ -83,6 +109,11 @@ public class CursoDao {
       }
   }
   
+  /**
+   * Método que se encarga de obtener todos los cursos que se han ingresado en el gestor.
+   * Retorna un ArrayList con todos los cursos existentes.
+   * @return 
+   */
   public ArrayList<Curso> getCursos(){
     String sql = "select * from curso";
     PreparedStatement statement;
@@ -106,6 +137,13 @@ public class CursoDao {
     return cursos; 
   }
   
+  /**
+   * Método que se encarga de obtener todos los cursos de una escuela en específico.
+   * Recibe como parámetro el codigo de a escuela a consultar.
+   * Retorna un ArrayList con todos los cursos pertenecientes a la escuela dada.
+   * @param codigoEscuela
+   * @return 
+   */
   public ArrayList<Curso> getCursosPorEscuela(String codigoEscuela){
     String sql = "select * from curso where escuela = ?";
     PreparedStatement statement;
@@ -129,6 +167,13 @@ public class CursoDao {
     return cursos; 
   }
   
+  /**
+   * Método que se encarga de obtner todos los cursos de un plan dado.
+   * Recibe como parámetro el número del plan.
+   * Retorna un ObservableList con todos los cursos de un determinado plan.
+   * @param plan
+   * @return 
+   */
   public ObservableList<Curso> getCursosPorPlan(int plan){
     String sql = "select * from bloque where plan = ?";
     String sql2 = "select * from curso where codigo = ?";
@@ -182,6 +227,13 @@ public class CursoDao {
     return cursos; 
   }
   
+  /**
+   * Método que se encarga de obtener todos los requisitos de un curso dado.
+   * Recibe como parámetro el codigo del curso.
+   * Retorna un ArrayList con todos los requisitos del curso.
+   * @param curso
+   * @return 
+   */
   public ArrayList<Curso> getCursosRequisitos(String curso){
     String sql = "select * from curso_requisito where curso = ?";
     String sql2 = "select * from curso where codigo = ?";
@@ -225,6 +277,13 @@ public class CursoDao {
     return cursos; 
   }
   
+  /**
+   * Método que se encarga de obtener todos los correquisitos de un curso dado.
+   * Recibe como parámetro el codigo del curso.
+   * Retorna un ArrayList con todos los correquisitos del curso.
+   * @param curso
+   * @return 
+   */
   public ArrayList<Curso> getCursosCorrequisitos(String curso){
     String sql = "select * from curso_correquisito where curso = ? or correquisito = ?";
     String sql2 = "select * from curso where codigo = ?";
@@ -274,6 +333,15 @@ public class CursoDao {
     return cursos; 
   }
   
+  /**
+   * Método que se encarga de eliminar un requisito de un curso.
+   * Recibe como parámetro el codigo del requisito y el codigo del curso.
+   * Retorna true si se pudo eliminar el requisito y false si no se puedo eliminar
+   * el requisito.
+   * @param requisito
+   * @param curso
+   * @return 
+   */
   public boolean eliminarRequisito(String requisito, String curso){
     boolean eliminado = false;
     String sql = "DELETE FROM curso_requisito WHERE curso = ? and requisitos = ?";
@@ -292,6 +360,15 @@ public class CursoDao {
     return eliminado;
   }
   
+  /**
+   * Método que se encarga de eliminar un correquisito de un curso.
+   * Recibe como parámetro el codigo del correquisito y el codigo del curso.
+   * Retorna true si se pudo eliminar el correquisito y false si no se puedo eliminar
+   * el correquisito.
+   * @param correquisito
+   * @param curso
+   * @return 
+   */
   public boolean eliminarCorrequisito(String correquisito, String curso){
     boolean eliminado = false;
     String sql = "DELETE FROM curso_correquisito WHERE curso = ? and correquisito = ?";
@@ -315,6 +392,14 @@ public class CursoDao {
     return eliminado;
   }
   
+  /**
+   * Método que se encarga de eliminar un curso.
+   * Recibe como parámetro el codigo del curso.
+   * Retorna true si el curso se puedo eliminar y false si el curso no se pudo 
+   * eliminar.
+   * @param curso
+   * @return 
+   */
   public boolean eliminarCurso(String curso){
     String sql = "select count(*) as total from bloque where curso=?";
     String sql2 = "DELETE FROM curso WHERE codigo=?";

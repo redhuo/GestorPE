@@ -18,16 +18,26 @@ import modelo.PlanDeEstudio;
 import utils.SQLConnection;
 
 /**
- *
- * @author Jimmy
+ * Clase que se encarga de accesar a a la base de datos y adquirir toda la información
+ * relacionada a los planes de estudio.
  */
 public class PlanDeEstudioDao {
   private SQLConnection conexionSqlite;
   private Connection conexion;
   
+  /**
+   * Método constructor de la clase.
+   * Se encarga de establecer conexion con la base de datos.
+   */
   public PlanDeEstudioDao(){
     conexionSqlite = new SQLConnection();
   }
+  
+  /**
+   * Método que se encarga de insertar un nuevo plan de estudio al gestor.
+   * Recibe como párametro un objeto de tipo PlanDeEstudio.
+   * @param nuevo 
+   */
   public void insertarNuevoPlan(PlanDeEstudio nuevo){
     String sql = "insert into plan_de_estudio(numero,fechaVigencia,escuela) values(?,?,?)";
     PreparedStatement statement;
@@ -45,6 +55,14 @@ public class PlanDeEstudioDao {
     }
   }
   
+  /**
+   * Método que se encarga de insertar un curso a un plan de estudio en el gestor.
+   * Recibe como párametro el codigo del plan, el codigo del curso y el bloque en 
+   * la que se encuentra el curso.
+   * @param plan
+   * @param curso
+   * @param bloque 
+   */
   public void insertarCurso(int plan, String curso,int bloque){
     String sql = "insert into bloque(plan,curso,numero) values(?,?,?)";
     PreparedStatement statement;
@@ -62,6 +80,13 @@ public class PlanDeEstudioDao {
     }
   }
   
+  /**
+   * Método que se encarga de obtener todos los planes de estudio de una escuela.
+   * Recibe como parámetro el codigo de la escuela.
+   * Retorna un ArrayList con todos los planes de estudio de una escuela.
+   * @param codigoEscuela
+   * @return 
+   */
   public ArrayList<PlanDeEstudio> getPlanesDeEstudioPorEscuela(String codigoEscuela){
     String sql = "select * from plan_de_estudio where escuela = ?";
     PreparedStatement statement;
@@ -86,6 +111,13 @@ public class PlanDeEstudioDao {
     return planes; 
   }
   
+  /**
+   * Método que se encarga de obtener todos los planes de estudio al que un curso pertenece.
+   * Recibe como parámetro el codigo del curso.
+   * Retorna un ObservableList con todos los planes de estudios.
+   * @param curso
+   * @return 
+   */
   public ObservableList<PlanDeEstudio> getPlanesDeEstudioPorCurso(String curso){
     String sql = "select * from bloque where curso = ?";
     String sql2 = "select * from plan_de_estudio where numero = ?";
@@ -131,6 +163,14 @@ public class PlanDeEstudioDao {
     return planes; 
   }
   
+  /**
+   * Método que se encarga eliminar un curso de un plan de estudio.
+   * Recibe como parámetro el número del plan y el codigo del curso.
+   * Retorna true si se pudo eliminar y falso si no se pudo eliminar.
+   * @param plan
+   * @param curso
+   * @return 
+   */
   public boolean eliminarPlanCurso(int plan, String curso){
     boolean eliminado = false;
     String sql = "DELETE FROM bloque WHERE plan = ? and curso = ?";

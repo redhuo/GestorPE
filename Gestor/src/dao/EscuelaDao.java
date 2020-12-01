@@ -18,18 +18,27 @@ import java.util.logging.Logger;
 
 
 /**
- *
- * @author Jimmy
+ * Clase que se encarga de accesar a la base de datos y adquirir toda la información
+ * relacionada a las escuelas.
  */
 public class EscuelaDao {
 
   private SQLConnection conexionSqlite;
   private Connection conexion;
   
+  /**
+   * Método constructor de la clase.
+   * Se encarga de establecer conexion con la base de datos.
+   */
   public EscuelaDao(){
     conexionSqlite = new SQLConnection();
   }
   
+  /**
+   * Método que se encarga de insertar una nueva escuela al gestor.
+   * Recibe como párametro un objeto de tipo Escuela.
+   * @param nuevo 
+   */
   public void insertarNuevaEscuela(Escuela nuevo){
     String sql = "insert into escuela(codigo,nombre) values(?,?)";
     PreparedStatement statement;
@@ -46,6 +55,11 @@ public class EscuelaDao {
       }
   }
   
+  /**
+   * Método que se encarga de obtener todas las escuelas del gestor.
+   * Retorna un ArrayList con todas las escuelas en el gestor.
+   * @return 
+   */
   public ArrayList<Escuela> getEscuelas(){
     String sql = "select * from escuela";
     Statement statement;
