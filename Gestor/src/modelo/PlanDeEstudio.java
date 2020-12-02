@@ -10,16 +10,27 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class PlanDeEstudio {
+public final class PlanDeEstudio {
   
-  private final IntegerProperty numero;
-  private final StringProperty fechaVigencia;
-  private final StringProperty escuela;
+  private final IntegerProperty numero = new SimpleIntegerProperty(0);
+  private final StringProperty fechaVigencia = new SimpleStringProperty("");
+  private final StringProperty escuela = new SimpleStringProperty("");
   
+  /**
+   * Constructor default vacio
+   */
+  public PlanDeEstudio(){ }
+  
+  /**
+   * Contructor PlanDeEstudio con atributos especificados
+   * @param pNumero
+   * @param pFecha
+   * @param pEscuela 
+   */
   public PlanDeEstudio(int pNumero, String pFecha, String pEscuela){
-    this.numero = new SimpleIntegerProperty(pNumero);
-    this.fechaVigencia = new SimpleStringProperty(pFecha);
-    this.escuela = new SimpleStringProperty(pEscuela);
+    setNumero(pNumero);
+    setFechaVigencia(pFecha);
+    setEscuela(pEscuela);
   }
 
   public int getNumero() {
@@ -46,4 +57,11 @@ public class PlanDeEstudio {
     this.escuela.set(escuela);
   }
   
+  @Override
+  public String toString(){
+    String msg;
+    msg = "Numero: " + numero.getValue() + ", Fecha vigencia: " + fechaVigencia.getValue() + 
+       ", Escuela: " + escuela.getValue();
+    return msg;
+  }
 }

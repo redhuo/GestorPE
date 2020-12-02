@@ -360,10 +360,8 @@ public class Inicio extends Application {
     //Eliminar requisito o corresquisito de un curso
     btnEliminarRequisito.setOnAction((ActionEvent e) -> { 
       int indice = tablaReqs.getSelectionModel().getSelectedIndex();
-      
       if(indice>-1){
         String cursoReqCodigo;
-        System.out.println("el error esta aqui "+ tablaReqs.getSelectionModel().getSelectedItem().getCodigo());
         cursoSelect = tablaReqs.getSelectionModel().getSelectedItem();
         cursoReqCodigo = cursoSelect.getCodigo();
         if(cursoDao.eliminarRequisito(cursoReqCodigo, curso)||

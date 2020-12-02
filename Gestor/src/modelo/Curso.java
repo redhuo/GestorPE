@@ -10,30 +10,52 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class Curso {
+public final class Curso {
   
-  private final StringProperty codigo;
-  private final StringProperty nombre;
-  private final StringProperty escuela;
-  private final StringProperty bloque = new SimpleStringProperty("");;
-  private final IntegerProperty creditos;
-  private final IntegerProperty horasLectivas;
+  private final StringProperty codigo = new SimpleStringProperty("");
+  private final StringProperty nombre = new SimpleStringProperty("");
+  private final StringProperty escuela = new SimpleStringProperty("");
+  private final StringProperty bloque = new SimpleStringProperty("");
+  private final IntegerProperty creditos = new SimpleIntegerProperty(0);
+  private final IntegerProperty horasLectivas = new SimpleIntegerProperty(0);
   
+  /**
+   * Contructor Curso default vacío
+   */
+  public Curso(){ }
+  
+  /**
+   * Contructor Curso sin bloque especificado
+   * @param pCodigo
+   * @param pNombre
+   * @param pCreditos
+   * @param pHorasLectivas
+   * @param pEscuela 
+   */
   public Curso(String pCodigo,String pNombre, int pCreditos, int pHorasLectivas, String pEscuela){
-    this.codigo = new SimpleStringProperty(pCodigo);
-    this.nombre =  new SimpleStringProperty(pNombre);
-    this.creditos = new SimpleIntegerProperty(pCreditos);
-    this.horasLectivas = new SimpleIntegerProperty(pHorasLectivas);
-    this.escuela =  new SimpleStringProperty(pEscuela);
+    setCodigo(pCodigo);
+    setNombre(pNombre);
+    setCreditos(pCreditos);
+    setCreditos(pHorasLectivas);
+    setEscuela(pEscuela);
   }
   
+  /**
+   * Contructor Curso con bloque especificado
+   * @param pCodigo
+   * @param pNombre
+   * @param pCreditos
+   * @param pHorasLectivas
+   * @param pBloque
+   * @param pEscuela 
+   */
   public Curso(String pCodigo,String pNombre, int pCreditos, int pHorasLectivas, String pBloque, String pEscuela){
-    this.codigo = new SimpleStringProperty(pCodigo);
-    this.nombre = new SimpleStringProperty(pNombre);
-    this.creditos = new SimpleIntegerProperty(pCreditos);
-    this.horasLectivas = new SimpleIntegerProperty(pHorasLectivas);
-    this.escuela = new SimpleStringProperty(pEscuela);
-    this.bloque.set(pBloque);
+    setCodigo(pCodigo);
+    setNombre(pNombre);
+    setCreditos(pCreditos);
+    setCreditos(pHorasLectivas);
+    setEscuela(pEscuela);
+    setBloque(pBloque);
   }
 
   public String getCodigo() {
@@ -83,4 +105,18 @@ public class Curso {
   public void setEscuela(String escuela) {
     this.escuela.set(escuela);
   }
+  
+  @Override
+  public String toString(){
+    String msg;
+    msg = "Codigo: " + codigo.getValue() + ", Nombre: " + nombre.getValue() + 
+       ", Escuela: " + escuela.getValue() + ", Bloque: " + bloque.getValue() +
+       ", Creditos: " + creditos.getValue() + ", Horas lectivas: " + horasLectivas.getValue();
+    return msg;
+  }
+  
+    public static void main(String[] args) {
+      Curso curso = new Curso("a","r",0,0,"t");
+      curso.toString();
+    }
 }
