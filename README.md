@@ -1,6 +1,7 @@
 # GestorPE
 
 Proyecto programado # 1 
+
 Curso: Programación orientada a objetos
 
 ## Dependencias
