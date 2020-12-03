@@ -37,8 +37,6 @@ public class RegistroReqCurso {
   ArrayList<Curso> cursos;
   ArrayList<Curso> cursosReq;
   ArrayList<Curso> cursosCor;
-  EscuelaDao escuelaDao;
-  CursoDao cursoDao;
   
   /**
    * Inicializa la ventana
@@ -113,8 +111,8 @@ public class RegistroReqCurso {
     grid.add(vbBtn, 0, 4, 2, 1);    
     
     //Cargar datos
-    cursoDao = new CursoDao(); 
-    escuelaDao = new EscuelaDao();
+    CursoDao cursoDao = new CursoDao(); 
+    EscuelaDao escuelaDao = new EscuelaDao();
     escuelas = escuelaDao.getEscuelas();
     escuelas.forEach((e) -> {
       bxEscuela.getItems().add(e.getNombre());

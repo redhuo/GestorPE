@@ -37,9 +37,6 @@ public class RegistroPlanEstudio {
   String bloque;
   ArrayList<Escuela> escuelas;
   ArrayList<Curso> cursos;
-  CursoDao cursoDao;
-  EscuelaDao escuelaDao;
-  PlanDeEstudioDao planDao;
   /**
    * Inicializa la ventana
    * @param primaryStage 
@@ -70,12 +67,7 @@ public class RegistroPlanEstudio {
     grid.add(lblEscuela, 0, 1);
     //Lista desplegable de escuelas o areas academicas
     ComboBox bxEscuela = new ComboBox();
-    grid.add(bxEscuela, 1, 1);    
-    escuelaDao = new EscuelaDao();
-    escuelas = escuelaDao.getEscuelas();
-    escuelas.forEach((e) -> {
-      bxEscuela.getItems().add(e.getNombre());
-    });
+    grid.add(bxEscuela, 1, 1); 
 
     //Campo de texto para codigo del plan de estudio 
     Label lblCodigo = new Label("Codigo:");
@@ -101,12 +93,7 @@ public class RegistroPlanEstudio {
     grid.add(lblCurso, 0, 5);    
     //Lista desplegable de escuelas o areas academicas
     ComboBox bxCurso = new ComboBox();
-    grid.add(bxCurso, 1, 5);    
-    cursoDao = new CursoDao();
-    cursos = cursoDao.getCursos();
-    cursos.forEach((c) -> {
-      bxCurso.getItems().add(c.getCodigo());
-    });
+    grid.add(bxCurso, 1, 5);  
     
     //Lista desplegable para seleccionar el bloque al que pertenece el curso en el plan de estudio
     Label lblBloque = new Label("Bloque:");
@@ -142,6 +129,18 @@ public class RegistroPlanEstudio {
     hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
     hbBtn.getChildren().addAll(btnLimpiar, btnCerrar);
     grid.add(hbBtn, 1, 9);
+    
+    //Cargar datos
+    EscuelaDao escuelaDao = new EscuelaDao();
+    escuelas = escuelaDao.getEscuelas(); 
+    escuelas.forEach((e) -> {
+      bxEscuela.getItems().add(e.getNombre());
+    }); 
+    CursoDao cursoDao = new CursoDao ();
+    cursos = cursoDao.getCursos();
+    cursos.forEach((c) -> {
+      bxCurso.getItems().add(c.getCodigo());
+    });
     
     //Limpia los campos de texto
     btnLimpiar.setOnAction((ActionEvent e) -> { 

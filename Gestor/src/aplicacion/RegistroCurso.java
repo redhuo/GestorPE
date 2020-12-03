@@ -36,7 +36,7 @@ public class RegistroCurso {
   ArrayList<Escuela> escuelas;
     
   /**
-   * Inicializa la ventana
+   * Inicializa la ventana RegistroCurso
    * @param primaryStage 
    */
   public void start(Stage primaryStage) {

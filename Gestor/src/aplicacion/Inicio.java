@@ -48,9 +48,6 @@ import utils.Email;
 import utils.PDF;
 
 public class Inicio extends Application {
-  CursoDao cursoDao;
-  EscuelaDao escuelaDao;
-  PlanDeEstudioDao planDeEstudioDao;
   Curso cursoSelect;
   Escuela escuelaSelect;
   PlanDeEstudio planSelect;
@@ -249,9 +246,9 @@ public class Inicio extends Application {
     grid.add(hbBtn, 0, 6, 4, 1);
     
     //Cargar datos
-    escuelaDao = new EscuelaDao();
-    planDeEstudioDao = new PlanDeEstudioDao();
-    cursoDao = new CursoDao();
+    EscuelaDao escuelaDao = new EscuelaDao();
+    PlanDeEstudioDao planDeEstudioDao = new PlanDeEstudioDao();
+    CursoDao cursoDao = new CursoDao();
     escuelas = escuelaDao.getEscuelas();
     escuelas.forEach((e) -> {
       bxEscuela.getItems().add(e.getNombre());
