@@ -10,11 +10,11 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public final class PlanDeEstudio {
+public class PlanDeEstudio {
   
-  private final IntegerProperty numero = new SimpleIntegerProperty(0);
-  private final StringProperty fechaVigencia = new SimpleStringProperty("");
-  private final StringProperty escuela = new SimpleStringProperty("");
+  private IntegerProperty numero = new SimpleIntegerProperty(0);
+  private StringProperty fechaVigencia = new SimpleStringProperty("");
+  private StringProperty escuela = new SimpleStringProperty("");
   
   /**
    * Constructor default vacio

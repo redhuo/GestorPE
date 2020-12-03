@@ -144,8 +144,10 @@ public class RegistroCurso {
       horas = bxHoras.getSelectionModel().getSelectedItem().toString();
       lblError.setText("");
       if(codigo.length() == 6 && nombre != "" && creditos != "" && horas != ""){
+        System.out.println("ls horas " + horas);
         Curso curso = new Curso(codigo, nombre, Integer.parseInt(creditos), Integer.parseInt(horas),escuela);
         CursoDao cursoDao = new CursoDao();
+        System.out.println(curso.toString());
         cursoDao.insertarNuevoCurso(curso, escuela);
         btnLimpiar.fire();
       }

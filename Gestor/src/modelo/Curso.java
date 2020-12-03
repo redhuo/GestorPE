@@ -10,14 +10,14 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public final class Curso {
+public class Curso {
   
-  private final StringProperty codigo = new SimpleStringProperty("");
-  private final StringProperty nombre = new SimpleStringProperty("");
-  private final StringProperty escuela = new SimpleStringProperty("");
-  private final StringProperty bloque = new SimpleStringProperty("");
-  private final IntegerProperty creditos = new SimpleIntegerProperty(0);
-  private final IntegerProperty horasLectivas = new SimpleIntegerProperty(0);
+  private StringProperty codigo = new SimpleStringProperty("");
+  private StringProperty nombre = new SimpleStringProperty("");
+  private StringProperty escuela = new SimpleStringProperty("");
+  private StringProperty bloque = new SimpleStringProperty("");
+  private IntegerProperty creditos = new SimpleIntegerProperty(0);
+  private IntegerProperty horasLectivas = new SimpleIntegerProperty(0);
   
   /**
    * Contructor Curso default vacío
@@ -36,7 +36,7 @@ public final class Curso {
     setCodigo(pCodigo);
     setNombre(pNombre);
     setCreditos(pCreditos);
-    setCreditos(pHorasLectivas);
+    setHorasLectivas(pHorasLectivas);
     setEscuela(pEscuela);
   }
   
@@ -53,7 +53,7 @@ public final class Curso {
     setCodigo(pCodigo);
     setNombre(pNombre);
     setCreditos(pCreditos);
-    setCreditos(pHorasLectivas);
+    setHorasLectivas(pHorasLectivas);
     setEscuela(pEscuela);
     setBloque(pBloque);
   }
