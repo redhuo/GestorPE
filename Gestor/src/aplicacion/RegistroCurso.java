@@ -149,7 +149,7 @@ public class RegistroCurso {
         CursoDao cursoDao = new CursoDao();
         System.out.println(curso.toString());
         cursoDao.insertarNuevoCurso(curso, escuela);
-        btnLimpiar.fire();
+        btnLimpiar.fire();   
       }
       else{
         lblError.setText("Error en los datos ingresados");

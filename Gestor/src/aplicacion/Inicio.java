@@ -397,7 +397,8 @@ public class Inicio extends Application {
       Stage stage = new Stage();
       RegistroEscuela ventana = new RegistroEscuela();
       ventana.start(stage);
-     // primaryStage.close();
+      primaryStage.close();
+      
     });
     
     //Abre la ventana de registro de curso
